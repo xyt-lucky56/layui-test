@@ -59,31 +59,31 @@
         </li>
          <li class="layui-nav-item">
           <a href="javascript:;" @click="toForm('表格的全选反选','/admin/checkboxTable')">表格的全选反选</a>
-        </li>
-         <li class="layui-nav-item">
-          <a href="javascript:;" @click="toForm('表格3','/admin/tableTwo')">表格3</a>
-        </li>
+        </li>        
          <li class="layui-nav-item">
           <a href="javascript:;" @click="toForm('上传文件','/admin/uploadImg')">上传文件</a>
-        </li>
-         <li class="layui-nav-item">
-          <a href="javascript:;" @click="toForm('树形组件','/admin/treeList')">树形组件</a>
-        </li>
+        </li>        
          <li class="layui-nav-item">
           <a href="javascript:;" @click="toForm('列表懒加载','/admin/tableLazy')">列表懒加载</a>
         </li>
         <li class="layui-nav-item">
           <a href="javascript:;" @click="toForm('图片懒加载','/admin/imageLazy')">图片懒加载</a>
-        </li>
-        <li class="layui-nav-item">
-          <a href="javascript:;" @click="toForm('锚点链接跳转','/admin/jump')">锚点链接跳转</a>
-        </li>
-        <li class="layui-nav-item" >
-          <a href="javascript:;" @click="toForm('按钮组件','/admin/btnPage')">按钮组件</a>
-        </li>
+        </li>              
           <li class="layui-nav-item" >
           <a href="javascript:;" @click="toForm('登录组件','/admin/login')">登录组件</a>
         </li>
+         <li class="layui-nav-item">
+          <a href="javascript:;" @click="toForm('系统管理','/admin/system')">系统管理</a>
+        </li>         
+         <li class="layui-nav-item">
+          <a href="javascript:;" @click="toForm('用户管理','/admin/user')">用户管理</a>
+        </li>         
+         <li class="layui-nav-item">
+          <a href="javascript:;" @click="toForm('角色管理','/admin/roleManagement')">角色管理</a>
+        </li>         
+         <li class="layui-nav-item">
+          <a href="javascript:;" @click="toForm('权限管理','/admin/permissions')">权限管理</a>
+        </li>         
       </ul>
     </div>
   </div>

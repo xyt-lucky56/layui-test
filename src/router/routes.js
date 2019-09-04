@@ -35,27 +35,12 @@ export const routesList = [
             path: '/admin/uploadImg',
             name: 'uploadImg',
             component: resolve => require(["@/views/uploadImg"], resolve),
-        },
-        {
-            path: '/admin/treeList',
-            name: 'treeList',
-            component: resolve => require(["@/views/treeList"], resolve),
-        },
+        },        
         {
             path: '/admin/checkboxTable',
             name: 'checkboxTable',
             component: resolve => require(["@/views/checkboxTable"], resolve),
-        },
-        {
-            path: '/admin/jump',
-            name: 'jump',
-            component: resolve => require(["@/views/jump"], resolve),
-        },
-        {
-            path: '/admin/btnPage',
-            name: 'btnPage',
-            component: resolve => require(["@/views/btnPage"], resolve),
-        },
+        },             
         {
             path: '/admin/tableLazy',
             name: 'tableLazy',
@@ -65,12 +50,7 @@ export const routesList = [
             path: '/admin/login',
             name: 'login',
             component: resolve => require(["@/views/login/login"], resolve),
-        },
-        {
-            path: '/admin/tableTwo',
-            name: 'tableTwo',
-            component: resolve => require(["@/views/tableTwo"], resolve),
-        },
+        },        
         {
             path: '/admin/complaints',
             name: '我要吐槽',
@@ -90,6 +70,36 @@ export const routesList = [
             path: '/admin/userCenter',
             name: '个人中心',
             component: resolve => require(["@/views/headerPages/userCenter"], resolve),
+        },
+        {
+            path: '/admin/system',
+            name: 'system',
+            component: resolve => require(["@/views/system/system"], resolve),
+        },
+        {
+            path: '/admin/subsystem',
+            name: 'subsystem',
+            component: resolve => require(["@/views/system/subsystem"], resolve),
+        },
+        {
+            path: '/admin/user',
+            name: 'user',
+            component: resolve => require(["@/views/user/user"], resolve),
+        },
+        {
+            path: '/admin/roleManagement',
+            name: 'roleManagement',
+            component: resolve => require(["@/views/roleManagement/roleManagement"], resolve),
+        },
+        {
+            path: '/admin/subrole',
+            name: 'subrole',
+            component: resolve => require(["@/views/roleManagement/subrole"], resolve),
+        },
+        {
+            path: '/admin/permissions',
+            name: 'permissions',
+            component: resolve => require(["@/views/permissions/permissions"], resolve),
         },
         ]
     }
