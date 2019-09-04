@@ -82,3 +82,9 @@ body,div,span,header,footer,nav,section,aside,article,ul,dl,dt,dd,li,a,p,h1,h2,h
     height: 100%;
     width: 100%;
   }
+  .layui-table-view .layui-table th{    
+      text-align: center;
+  }    
+  .layui-table tr td{
+    text-align: center;
+  }

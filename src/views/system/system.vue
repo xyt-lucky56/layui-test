@@ -78,23 +78,13 @@ export default {
 </script>
 <style lang="less" scope>
     .system{   
-        h1{
-            margin-top: 50px;
-        }     
+        text-align: center;  
         .content{
             margin: 20px;
             text-align: left;
             .addbtn{
                 margin: 10px 0;
-            }
-            .layui-table-view{
-                .layui-table{
-                    text-align: center;
-                    th{
-                        text-align: center;
-                    }
-                }
-            }            
+            }                    
         }
     }
 </style>

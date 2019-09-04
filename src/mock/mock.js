@@ -66,6 +66,39 @@ const postData = req => {
       count:20
     }
   }
+const postData1 = req => {  
+    // console.log(req) // 请求体，用于获取参数
+    let data = [] // 用于存放文章数据的数组
+    let count=10
+    if(req.url.indexOf('?')!=-1){//获取分页页码
+      count=req.url.split('&')[1].split('=')[1]
+    }
+    
+    for (let i = 0; i < count; i++) {
+      let post = {
+          ID:i+1,
+          username:Random.string('lower', 5),
+          department: '平台事业部',          
+          name: Random.cname(),
+          phone: '13264687646', 
+          phoneNumber: '027-123456', 
+          // date: Random.date() + ' ' + Random.time() // 随机生成年月日 + 时间
+          email: Random.email(),
+          zipcode:Random.zip(), 
+          userType:'司机', 
+          address:Random.county(true),
+          createTime:Random.now(), 
+      }  
+      data.push(post)
+    }
+    
+    // 返回状态码和文章数据posts
+    return {
+      code,
+      data,
+      count:20
+    }
+  }
 
 Mock.setup({
     timeout: 500
@@ -75,5 +108,6 @@ Mock.setup({
 Mock.mock(RegExp("/api/user/myTranferRecord"+".*"), 'get', newsData)
 Mock.mock('/api/getForm', 'get', newsData)
 Mock.mock(RegExp("/api/user/systemRecord"+".*"), 'get', postData);
+Mock.mock(RegExp("/api/user/tableList"+".*"), 'get', postData1);
 
 

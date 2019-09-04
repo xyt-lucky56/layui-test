@@ -44,3 +44,9 @@ const twoNumber = /^\d+(\.\d{1,2})?$/
 export const checkTwoNumber = (value) => {
     return twoNumber.test(value)
 }
+
+//版本号
+const version=/^([1-9]\d|[1-9])(\.([1-9]\d|\d)){2}$/
+export const versionNum = (value) =>{
+    return version.test(value)
+}

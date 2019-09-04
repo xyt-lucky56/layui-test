@@ -7,35 +7,35 @@
                     <label class="layui-form-label">系统名称 :</label>
                     <div class="layui-input-block">
                         <span v-if="status">{{info.name}}</span>
-                        <input v-else type="text" name="name" lay-verify="required" autocomplete="off" placeholder="请输入系统名称" lay-verType='tips' class="layui-input">
+                        <input v-else type="text" name="name" v-model="systemInfo.name" lay-verify="required" autocomplete="off" placeholder="请输入系统名称" lay-verType='tips' class="layui-input">
                     </div>
                 </div>
                 <div class="layui-form-item">                
                     <label class="layui-form-label">系统描述 :</label>
                     <div class="layui-input-block">
                         <span v-if="status">{{info.describe}}</span>
-                        <input v-else type="text" name="describe" lay-verify="required" autocomplete="off" placeholder="请输入系统描述" lay-verType='tips' class="layui-input ">
+                        <input v-else type="text" name="describe" v-model="systemInfo.describe" lay-verify="required" autocomplete="off" placeholder="请输入系统描述" lay-verType='tips' class="layui-input ">
                     </div>
                 </div>                
                 <div class="layui-form-item">                
                     <label class="layui-form-label">系统版本号 :</label>
                     <div class="layui-input-block">
                         <span v-if="status">{{info.version}}</span>
-                        <input v-else type="text" name="version" lay-verify="required" autocomplete="off" placeholder="请输入系统版本号" lay-verType='tips' class="layui-input">
+                        <input v-else type="text" name="version" v-model="systemInfo.version" lay-verify="required|version" autocomplete="off" placeholder="请输入系统版本号" lay-verType='tips' class="layui-input">
                     </div>
                 </div>                
                 <div class="layui-form-item">                
                     <label class="layui-form-label">展示顺序 :</label>
                     <div class="layui-input-block">
                         <span v-if="status">{{info.order}}</span>
-                        <input v-else type="text" name="order" lay-verify="required" autocomplete="off" placeholder="请输入展示顺序" lay-verType='tips' class="layui-input">
+                        <input v-else type="number" name="order" v-model="systemInfo.order" lay-verify="required" autocomplete="off" placeholder="请输入展示顺序" lay-verType='tips' class="layui-input">
                     </div>
                 </div>                
                 <div class="layui-form-item">                
                     <label class="layui-form-label">起始页面 :</label>
                     <div class="layui-input-block">
                         <span v-if="status">{{info.startPage}}</span>
-                        <input v-else type="text" name="startPage" lay-verify="required" autocomplete="off" placeholder="请输入起始页面" lay-verType='tips' class="layui-input">
+                        <input v-else type="text" name="startPage" v-model="systemInfo.startPage" lay-verify="required" autocomplete="off" placeholder="请输入起始页面" lay-verType='tips' class="layui-input">
                     </div>
                 </div> 
                 <div class="layui-form-item">
@@ -53,22 +53,32 @@
     </div>
 </template>
 <script>
+import { versionNum } from '@/filter/regular'
 export default {
     data(){
         return{
             title:'添加子系统',
             info:{},
             status:false,
-            flag:false
+            flag:false,
+            systemInfo:{
+                name:'',
+                describe:'',
+                version:'',
+                order:'',
+                startPage:'',
+            },
+            version:''
         }
     },
     created(){
         if(JSON.stringify(this.$route.params)!='{}'){
             this.info=this.$route.params.data
-            console.log(this.info)
+            // console.log(this.info)
             if(this.$route.params.flag){
                 this.flag=this.$route.params.flag
                 this.title="子系统编辑"
+                this.systemInfo=this.info
             }else{
                 this.status=true
                 this.title="子系统详情"
@@ -80,6 +90,7 @@ export default {
             var form = layui.form
             form.render()
             this.formSubmit(form)
+            this.checkForm(form)
         })
     },
     methods:{
@@ -92,6 +103,11 @@ export default {
                 
             });
         },
+        checkForm(form){
+            form.verify({
+                version:[/^([1-9]\d|[1-9])(\.([1-9]\d|\d)){2}$/,'版本号不符合规则']
+            })
+        },
         cancel(){
             this.$router.back(-1);
         }
@@ -101,9 +117,7 @@ export default {
 <style lang="less" scope>
     .subsystem{
         width: 80%;
-        h1{
-            margin-top: 50px;
-        }
+        text-align: center;
         .content{
             margin: 20px; 
             .layui-form{
