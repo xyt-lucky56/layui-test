@@ -45,17 +45,16 @@ export default {
         FengunionTable('test', '/api/user/systemRecord', this.cols, {}, true,this.limit).then(e => {//表格初始化
             // console.log(e)
         })    
-        layui.use(['table','jquery'], ()=>{
-            var table=layui.table,
-            $=layui.jquery
-            this.statusChange(table,$)
+        layui.use(['table'], ()=>{
+            var table=layui.table
+            this.statusChange(table)
         })     
     },
     methods:{
         add(){
             this.$router.push('/admin/subsystem');
         },
-        statusChange(table,$){
+        statusChange(table){
             //监听行工具事件
             table.on('tool(test)', (obj)=>{
                 var data = obj.data//得到所在行所有键值

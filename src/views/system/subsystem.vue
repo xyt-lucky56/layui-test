@@ -28,7 +28,7 @@
                     <label class="layui-form-label">展示顺序 :</label>
                     <div class="layui-input-block">
                         <span v-if="status">{{info.order}}</span>
-                        <input v-else type="number" name="order" v-model="systemInfo.order" lay-verify="required" autocomplete="off" placeholder="请输入展示顺序" lay-verType='tips' class="layui-input">
+                        <input v-else type="text" name="order" v-model="systemInfo.order" lay-verify="required|number" autocomplete="off" placeholder="请输入展示顺序" lay-verType='tips' class="layui-input">
                     </div>
                 </div>                
                 <div class="layui-form-item">                
@@ -100,7 +100,7 @@ export default {
                 console.log(data.field)
                 this.$message.success('提交成功')
                 this.$router.push('/system')
-                
+                return false
             });
         },
         checkForm(form){

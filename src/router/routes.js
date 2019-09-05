@@ -106,6 +106,11 @@ export const routesList = [
             name: 'adduser',
             component: resolve => require(["@/views/user/adduser"], resolve),
         },
+        {
+            path: '/admin/roleassignment',
+            name: 'roleassignment',
+            component: resolve => require(["@/views/user/roleassignment"], resolve),
+        },
         ]
     }
 ]

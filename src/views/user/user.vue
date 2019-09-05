@@ -16,6 +16,10 @@
                 </table>
             </div>
         </div>
+        <!-- 弹窗中的树形组件 -->
+        <!-- <div id='bindPage' class="layui-hide">
+            <div id="test2" class="demo-tree"></div>
+        </div> -->
     </div>
 </template>
 <script>
@@ -30,7 +34,7 @@ export default {
                     {title: '财务部',id:13},
                     {title: '人事部',id:14},
                 ]}
-            ],
+            ],            
             cols:[[
                 {field:'ID', title: 'ID',width:80,sort: true,fixed: 'left'},
                 {field:'username', title: '用户名',fixed: 'left'},
@@ -44,31 +48,85 @@ export default {
                 {field:'address', title: '地址'},
                 {field:'createTime', title: '创建时间',width:200},
                 {field:'status', title: '操作',toolbar: '#barDemo',width:200,fixed: 'right'},
-            ]]
+            ]],
+            tree:'',
         }
     },
     mounted(){
         FengunionTable('test1', '/api/user/tableList', this.cols, {}, true).then(e => {//表格初始化
             // console.log(e)
         })    
-        layui.use(['tree', 'util'], ()=>{
+        layui.use(['tree','table'], ()=>{
             var tree = layui.tree
-            ,util = layui.util
+            ,table=layui.table
+            this.tree=tree
             tree.render({
                 elem: '#test',
                 data:this.data,
                 accordion: true,//手风琴模式                
                 click: function(obj){
-                    var data = obj.data;  //获取当前点击的节点数据
+                    let data = obj.data;  //获取当前点击的节点数据
                     console.log(data)
-                    // layer.msg('状态：'+ obj.state + '<br>节点数据：' + JSON.stringify(data));
+                    if(data.title=='平台事业部'){
+                        table.reload('test1', {
+                            url: '/api/user/tableInfo'
+                            ,where: {} //设定异步数据接口的额外参数
+                            //,height: 300
+                        });
+                    }else if(data.title=='研发部'){
+                        table.reload('test1', {
+                            url: '/api/user/userInfo'
+                        });
+                    }else if(data.title=='部门'){
+                        table.reload('test1', {
+                            url: '/api/user/tableList'
+                        });
+                    }
                 }
-            })
+            })            
+            this.statusChange(table)
         })
     },
     methods:{
         add(){
              this.$router.push('/admin/adduser');
+        },
+        statusChange(table){
+            //监听行工具事件
+            table.on('tool(test1)', (obj)=>{
+                var data = obj.data
+                if(obj.event === 'edit'){
+                    this.$router.push({name:'adduser',params:{data}});
+                }else if(obj.event === 'del'){
+                    layer.confirm('真的删除行么', function(index){
+                        obj.del();
+                        layer.close(index);
+                    });
+                }else if(obj.event === 'jump'){
+                    this.$router.push('/admin/roleassignment')
+                    // layer.open({
+                    //     type: 6,   // 6可以使表单超出部分不被遮挡
+                    //     title: '角色分配',
+                    //     area: '400px',
+                    //     btn: ['确认', '取消'],
+                    //     btnAlign: 'c',   // 按钮居中
+                    //     content: $('#bindPage').html(),
+                    //     success: (layero, index) => {
+                    //         this.tree.render({
+                    //             elem: '#test2',
+                    //             data:this.data1,
+                    //             click: function(obj){
+                    //                 let data = obj.data;  //获取当前点击的节点数据
+                    //                 console.log(data)
+                    //             }
+                    //         })
+                    //     },
+                    //     yes: (index, layero)=>{
+                    //         layer.close(index);
+                    //     }
+                    // });
+                }
+            })
         }
     }
 }
@@ -88,7 +146,7 @@ export default {
                 height: 100%;               
             }
             .content-right{
-                width: 80%;
+                width:85%;
                 height: 100%;        
             }
         }
