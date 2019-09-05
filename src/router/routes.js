@@ -101,6 +101,11 @@ export const routesList = [
             name: 'permissions',
             component: resolve => require(["@/views/permissions/permissions"], resolve),
         },
+        {
+            path: '/admin/adduser',
+            name: 'adduser',
+            component: resolve => require(["@/views/user/adduser"], resolve),
+        },
         ]
     }
 ]

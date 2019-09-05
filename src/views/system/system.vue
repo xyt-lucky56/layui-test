@@ -79,6 +79,9 @@ export default {
 <style lang="less" scope>
     .system{   
         text-align: center;  
+        h1{
+            margin-top: 30px;
+        }
         .content{
             margin: 20px;
             text-align: left;
