@@ -6,7 +6,7 @@
                 <div id="test" class="demo-tree"></div>
             </div>
             <div class="content-right left">
-                <button class="layui-btn addbtn">添加用户</button> 
+                <button class="layui-btn addbtn" @click="add">添加用户</button> 
                 <table class="layui-hide" lay-filter="test1" id="test1">
                     <div id="barDemo">
                         <a class="layui-btn layui-btn-xs bgeditor" lay-event="jump">角色分配</a>
@@ -33,7 +33,7 @@ export default {
             ],
             cols:[[
                 {field:'ID', title: 'ID',width:80,sort: true,fixed: 'left'},
-                {field:'username', title: '用户名'},
+                {field:'username', title: '用户名',fixed: 'left'},
                 {field:'department', title: '所属部门'},
                 {field:'name', title: '姓名'},
                 {field:'phone', title: '手机号'},
@@ -67,15 +67,21 @@ export default {
         })
     },
     methods:{
-
+        add(){
+             this.$router.push('/admin/adduser');
+        }
     }
 }
 </script>
 <style lang="less" scope>
     .user{
-        // text-align: center;
+        text-align: center;
+        h1{
+            margin-top: 30px;
+        }
         .content{
             width: 100%;
+            text-align: left;
             overflow: hidden;
             .content-left{
                 width: 10%; 
