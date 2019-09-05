@@ -6,7 +6,7 @@
                 <div id="classtree" class="demo-tree"></div>
             </div>
             <div class="content-right left">
-                <button class="layui-btn addbtn">添加一级菜单</button> 
+                <button class="layui-btn addbtn" @click="addMenu">添加一级菜单</button> 
                 <table class="layui-hide" lay-filter="test1" id="test1">
                     <div id="barDemo">
                         <a class="layui-btn layui-btn-xs" lay-event="jump">添加子菜单</a>
@@ -46,9 +46,9 @@ export default {
             this.tree = tree;
             
         });
-        FengunionTable('tableRole', '/api/info/permissionList', this.cols, {}, true,this.limit, 'get', filterViewType).then(e => {//表格初始化
-            console.log(e)
-        })
+        // FengunionTable('test1', '/api/permission/permissionList', this.cols, {}, true,this.limit, 'get', filterViewType).then(e => {//表格初始化
+        //     console.log(e)
+        // })
         layui.use('table', () => {
             // this.editorBtn(layui.table)
         })
@@ -70,7 +70,7 @@ export default {
         },
         // 监听表格操作按钮  (要想按钮触发此事件，需添加lay-event)
         // editorBtn(table) {
-        //     table.on('tool(tableRole)', (obj) => {
+        //     table.on('tool(test1)', (obj) => {
         //         console.log(obj)
         //         var data = obj.data;
         //         if (obj.event === 'detail') {
@@ -88,6 +88,9 @@ export default {
         //         }
         //     });
         // },
+        addMenu() {
+            this.$router.push({name: "subMenuOne"});
+        }
     }
 }
 </script>
