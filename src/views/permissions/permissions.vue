@@ -1,5 +1,114 @@
 <template>
-    <div>
-        权限
+    <div class="user">
+        <h1>权限管理</h1>
+        <div class="content">
+            <div class="content-left left">
+                <div id="classtree" class="demo-tree"></div>
+            </div>
+            <div class="content-right left">
+                <button class="layui-btn addbtn">添加一级菜单</button> 
+                <table class="layui-hide" lay-filter="test1" id="test1">
+                    <div id="barDemo">
+                        <a class="layui-btn layui-btn-xs" lay-event="jump">添加子菜单</a>
+                        <a class="layui-btn layui-btn-xs bgeditor" lay-event="edit">编辑</a>
+                        <a class="layui-btn layui-btn-xs bgwarn" lay-event="del">删除</a>
+                    </div>
+                </table>
+            </div>
+        </div>
     </div>
 </template>
+<script>
+import FengunionTable from '@/utils/comTable'//表格封装
+import { filterViewType } from "@/filter/groupList"
+export default {
+    data() {
+        return {
+            tree: null,
+            table: null,
+            treedata: [{
+                title: '订单管理系统'
+                ,children:[{
+                    title: "订单管理"
+                },{
+                    title: "订单配送"
+                },{
+                    title: "订单统计"
+                }]
+            }],
+            tabledata: [],
+        }
+    },
+    mounted() {
+        layui.use('tree', () => {
+            var tree = layui.tree;
+            this.showtree(layui.tree);
+            this.tree = tree;
+            
+        });
+        FengunionTable('tableRole', '/api/info/permissionList', this.cols, {}, true,this.limit, 'get', filterViewType).then(e => {//表格初始化
+            console.log(e)
+        })
+        layui.use('table', () => {
+            // this.editorBtn(layui.table)
+        })
+    },
+    methods: {
+        showtree(tree) {
+            tree.render({
+                elem: '#classtree'
+                ,id: 'classtree'
+                ,data: this.treedata
+                ,click: function(obj){
+                    console.log(obj.data); //得到当前点击的节点数据
+                    console.log(obj.state); //得到当前节点的展开状态：open、close、normal
+                    console.log(obj.elem); //得到当前节点元素
+                    
+                    console.log(obj.data.children); //当前节点下是否有子节点
+                }
+            })
+        },
+        // 监听表格操作按钮  (要想按钮触发此事件，需添加lay-event)
+        // editorBtn(table) {
+        //     table.on('tool(tableRole)', (obj) => {
+        //         console.log(obj)
+        //         var data = obj.data;
+        //         if (obj.event === 'detail') {
+        //             // this.$message.success('恭喜您，打开成功')
+        //             this.$router.push({name: 'subrole', query: { type: 'detail', data }});
+        //         } else if (obj.event === 'del') {
+        //             this.$message.confirm('真的删除行么').then(() => {
+        //                 obj.del();
+        //             })
+        //         } else if (obj.event === 'edit') {
+        //             // layer.alert('编辑行：<br>' + JSON.stringify(data))
+        //             this.$router.push({name: 'subrole', query: { type: 'edit', data }});
+        //         } else if(obj.event === 'assign') {
+        //             this.$router.push({ name: 'rolePower' })
+        //         }
+        //     });
+        // },
+    }
+}
+</script>
+<style lang="less" scoped>
+.user{
+    text-align: center;
+    h1{
+        margin-top: 30px;
+    }
+    .content{
+        width: 100%;
+        text-align: left;
+        overflow: hidden;
+        .content-left{
+            width: 10%; 
+            height: 100%;               
+        }
+        .content-right{
+            width: 80%;
+            height: 100%;        
+        }
+    }
+}
+</style>

@@ -81,7 +81,7 @@ export default {
 <style lang="less" scoped>
 .role {
     h1 {
-        margin-top: 50px; 
+        margin-top: 30px; 
     }
     .content {
         .add-box {

@@ -1,6 +1,6 @@
 <template>
     <div class="subsystem">
-        <h1>角色权限分配</h1>
+        <h1>权限分配</h1>
         <div class="content">
             <div id="test1" class="demo-tree-more"></div>
             <div class="layui-input-block submit">
