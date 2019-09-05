@@ -30,7 +30,7 @@ function setStorage(name, value) {
 
 // 取出localStorage 
 function getStorage(name) {
-  store.get(name)
+  return store.get(name)
 }
 
 //删除localStorage
