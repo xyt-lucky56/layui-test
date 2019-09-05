@@ -36,7 +36,18 @@ export default {
                     title: "订单统计"
                 }]
             }],
-            tabledata: [],
+            cols:[[
+                {field:'ID', title: '编号', width:150, sort: true},
+                {field:'menuName', title: '菜单名称'},
+                {field:'powerType', title: '权限类型'},
+                {field:'relativePath', title: '相对文件路径'},
+                {field:'relativeFileName', title: '相对文件名称'},
+                {field:'viewType', title: '界面类型'},
+                {field:'menuDisc', title: '菜单说明'},
+                {field:'status', title: '操作',toolbar: '#barDemo',width:210,fixed: 'right'},
+            ]],
+            limit:10,
+            limits:[5,7,10],
         }
     },
     mounted() {
@@ -46,11 +57,11 @@ export default {
             this.tree = tree;
             
         });
-        // FengunionTable('test1', '/api/permission/permissionList', this.cols, {}, true,this.limit, 'get', filterViewType).then(e => {//表格初始化
-        //     console.log(e)
-        // })
+        FengunionTable('test1', '/api/permission/permissionList', this.cols, {}, true,this.limit, 'get', filterViewType).then(e => {//表格初始化
+            console.log(e)
+        })
         layui.use('table', () => {
-            // this.editorBtn(layui.table)
+            this.editorBtn(layui.table)
         })
     },
     methods: {
@@ -69,25 +80,22 @@ export default {
             })
         },
         // 监听表格操作按钮  (要想按钮触发此事件，需添加lay-event)
-        // editorBtn(table) {
-        //     table.on('tool(test1)', (obj) => {
-        //         console.log(obj)
-        //         var data = obj.data;
-        //         if (obj.event === 'detail') {
-        //             // this.$message.success('恭喜您，打开成功')
-        //             this.$router.push({name: 'subrole', query: { type: 'detail', data }});
-        //         } else if (obj.event === 'del') {
-        //             this.$message.confirm('真的删除行么').then(() => {
-        //                 obj.del();
-        //             })
-        //         } else if (obj.event === 'edit') {
-        //             // layer.alert('编辑行：<br>' + JSON.stringify(data))
-        //             this.$router.push({name: 'subrole', query: { type: 'edit', data }});
-        //         } else if(obj.event === 'assign') {
-        //             this.$router.push({ name: 'rolePower' })
-        //         }
-        //     });
-        // },
+        editorBtn(table) {
+            table.on('tool(test1)', (obj) => {
+                // console.log(obj)
+                var data = obj.data;
+                if (obj.event === 'del') {
+                    this.$message.confirm('真的删除行么').then(() => {
+                        obj.del();
+                    })
+                } else if (obj.event === 'edit') {
+                    // layer.alert('编辑行：<br>' + JSON.stringify(data))
+                    this.$router.push({name: 'subMenuOne', query: { data }});
+                } else if(obj.event === 'jump') {
+                    this.$router.push({ name: 'subMenuChild' })
+                }
+            });
+        },
         addMenu() {
             this.$router.push({name: "subMenuOne"});
         }
