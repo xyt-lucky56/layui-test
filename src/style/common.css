@@ -84,7 +84,11 @@
   line-height: 36px;
 }
 
+h1 {
+  text-align: center;
+}
 /* 分页靠左 */
 .layui-table-page {
   text-align: left;
 }
+
