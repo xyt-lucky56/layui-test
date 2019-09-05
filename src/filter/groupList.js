@@ -13,5 +13,11 @@ export const roomList = [{
     label: 4
 }]
 
-
+// 系统名称
+export const sysnameList = [
+    { val: "operational", label: "运营平台" },
+    { val: "order", label: "订单管理系统" },
+    { val: "finance", label: "财务管理系统" },
+    { val: "stock ", label: "库存管理系统" }
+]
 

@@ -38,3 +38,17 @@ Vue.filter('filterImg', function (value) {
     return api + '/d/img/s/' + value
 })
 
+// 角色系统名称转换
+Vue.filter("filterSysName", function(val) {
+    if(val === 'operational'){
+        return "运营平台"
+    }else if(val === 'order'){
+        return "订单管理系统"
+    }else if(val === 'finance'){
+        return "财务管理系统"
+    }else if(val === 'stock'){
+        return "库存管理系统"
+    }else{
+        return '--'
+    }
+})

@@ -15,7 +15,7 @@ const postData1 = req => {
     let post = {
         ID: i+1,
         name: Random.ctitle(3, 5),
-        systemName: Random.ctitle(3, 5),
+        systemName: 'finance',
         // describe: '管理订单信息', // 随机生成长度为10-25的标题
         // version: '1.0.0', // 随机生成大小为250x250的图片链接
         // startImgName: '上线', // 随机生成大小为250x250的图片链接
@@ -23,7 +23,7 @@ const postData1 = req => {
         // // date: Random.date() + ' ' + Random.time() // 随机生成年月日 + 时间
         // imgPath: Random.url(),
         // order:Random.natural(0, 20), 
-        startPage:'index'+i+'.heml', 
+        // startPage:'index'+i+'.html', 
         note: Random.ctitle(3, 50), 
     }
 

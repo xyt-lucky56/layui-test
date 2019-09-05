@@ -1,6 +1,6 @@
 <template>
     <div class="role">
-        <h1>角色</h1>
+        <h1>角色管理</h1>
         <div class="content">
             <div class="add-box">            
                 <button class="layui-btn addbtn" @click="add">添加角色</button>
@@ -57,15 +57,18 @@ export default {
         // 监听表格操作按钮  (要想按钮触发此事件，需添加lay-event)
         editorBtn(table) {
             table.on('tool(tableRole)', (obj) => {
+                console.log(obj)
                 var data = obj.data;
                 if (obj.event === 'detail') {
-                this.$message.success('恭喜您，打开成功')
+                    // this.$message.success('恭喜您，打开成功')
+                    this.$router.push({name: 'subrole', query: { type: 'detail', data }});
                 } else if (obj.event === 'del') {
-                this.$message.confirm('真的删除行么').then(() => {
-                    obj.del();
-                })
+                    this.$message.confirm('真的删除行么').then(() => {
+                        obj.del();
+                    })
                 } else if (obj.event === 'edit') {
-                layer.alert('编辑行：<br>' + JSON.stringify(data))
+                    // layer.alert('编辑行：<br>' + JSON.stringify(data))
+                    this.$router.push({name: 'subrole', query: { type: 'edit', data }});
                 }
             });
         },
