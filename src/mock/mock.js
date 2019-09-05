@@ -32,7 +32,6 @@ const newsData = function () {
 
 }
 
-// 随机生成文章数据
 const postData = req => {  
     // console.log(req) // 请求体，用于获取参数
     let data = [] // 用于存放文章数据的数组
@@ -45,10 +44,10 @@ const postData = req => {
       let post = {
           ID:i+1,
           name:'订单管理',
-          describe: '管理订单信息', // 随机生成长度为10-25的标题
-          version: '1.0.0', // 随机生成大小为250x250的图片链接
-          startImgName: '上线', // 随机生成大小为250x250的图片链接
-          noStartImgName: '下线', // 随机生成名字
+          describe: '管理订单信息', 
+          version: Random.natural(1, 5)+'.'+Random.natural(1, 9)+'.0', 
+          startImgName: '上线', 
+          noStartImgName: '下线',
           // date: Random.date() + ' ' + Random.time() // 随机生成年月日 + 时间
           imgPath: Random.url(),
           order:Random.natural(0, 20), 
@@ -67,21 +66,26 @@ const postData = req => {
     }
   }
 const postData1 = req => {  
-    // console.log(req) // 请求体，用于获取参数
-    let data = [] // 用于存放文章数据的数组
+    let data = [] 
     let count=10
     if(req.url.indexOf('?')!=-1){//获取分页页码
       count=req.url.split('&')[1].split('=')[1]
     }
     
     for (let i = 0; i < count; i++) {
+      let count=''
+      if(i%2==0){
+        count="平台事业部"
+      }else{
+        count='研发部'
+      }
       let post = {
           ID:i+1,
           username:Random.string('lower', 5),
-          department: '平台事业部',          
+          department: count,          
           name: Random.cname(),
           phone: '13264687646', 
-          phoneNumber: '027-123456', 
+          phoneNumber: '027-2346463', 
           // date: Random.date() + ' ' + Random.time() // 随机生成年月日 + 时间
           email: Random.email(),
           zipcode:Random.zip(), 
@@ -99,6 +103,70 @@ const postData1 = req => {
       count:20
     }
   }
+const postData2 = req => {  
+    let data = [] 
+    let count=10
+    if(req.url.indexOf('?')!=-1){//获取分页页码
+      count=req.url.split('&')[1].split('=')[1]
+    }
+    
+    for (let i = 0; i < count; i++) {      
+      let post = {
+          ID:i+1,
+          username:Random.string('lower', 5),
+          department: '平台事业部',          
+          name: Random.cname(),
+          phone: '13264687646', 
+          phoneNumber: '027-2346463', 
+          // date: Random.date() + ' ' + Random.time() // 随机生成年月日 + 时间
+          email: Random.email(),
+          zipcode:Random.zip(), 
+          userType:'司机', 
+          address:Random.county(true),
+          createTime:Random.now(), 
+      }  
+      data.push(post)
+    }
+    
+    // 返回状态码和文章数据posts
+    return {
+      code,
+      data,
+      count:10
+    }
+  }
+const postData3 = req => {  
+    let data = [] 
+    let count=10
+    if(req.url.indexOf('?')!=-1){//获取分页页码
+      count=req.url.split('&')[1].split('=')[1]
+    }
+    
+    for (let i = 0; i < count; i++) {      
+      let post = {
+          ID:i+1,
+          username:Random.string('lower', 5),
+          department: '研发部',          
+          name: Random.cname(),
+          phone: '13264687646', 
+          phoneNumber: '027-2346463', 
+          // date: Random.date() + ' ' + Random.time() // 随机生成年月日 + 时间
+          email: Random.email(),
+          zipcode:Random.zip(), 
+          userType:'司机', 
+          address:Random.county(true),
+          createTime:Random.now(), 
+      }  
+      data.push(post)
+    }
+    
+    // 返回状态码和文章数据posts
+    return {
+      code,
+      data,
+      count:10
+    }
+  }
 
 Mock.setup({
     timeout: 500
@@ -109,5 +177,7 @@ Mock.mock(RegExp("/api/user/myTranferRecord"+".*"), 'get', newsData)
 Mock.mock('/api/getForm', 'get', newsData)
 Mock.mock(RegExp("/api/user/systemRecord"+".*"), 'get', postData);
 Mock.mock(RegExp("/api/user/tableList"+".*"), 'get', postData1);
+Mock.mock(RegExp("/api/user/tableInfo"+".*"), 'get', postData2);
+Mock.mock(RegExp("/api/user/userInfo"+".*"), 'get', postData3);
 
 

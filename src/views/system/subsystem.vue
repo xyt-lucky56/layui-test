@@ -6,36 +6,36 @@
                 <div class="layui-form-item">                
                     <label class="layui-form-label">系统名称 :</label>
                     <div class="layui-input-block">
-                        <span v-if="status">{{info.name}}</span>
-                        <input v-else type="text" name="name" v-model="systemInfo.name" lay-verify="required" autocomplete="off" placeholder="请输入系统名称" lay-verType='tips' class="layui-input">
+                        <!-- <span v-if="status">{{info.name}}</span> -->
+                        <input type="text" name="name" :readonly="status" v-model="systemInfo.name" lay-verify="required" autocomplete="off" placeholder="请输入系统名称" lay-verType='tips' class="layui-input">
                     </div>
                 </div>
                 <div class="layui-form-item">                
                     <label class="layui-form-label">系统描述 :</label>
                     <div class="layui-input-block">
-                        <span v-if="status">{{info.describe}}</span>
-                        <input v-else type="text" name="describe" v-model="systemInfo.describe" lay-verify="required" autocomplete="off" placeholder="请输入系统描述" lay-verType='tips' class="layui-input ">
+                        <!-- <span v-if="status">{{info.describe}}</span> -->
+                        <input type="text" name="describe" :readonly="status" v-model="systemInfo.describe" lay-verify="required" autocomplete="off" placeholder="请输入系统描述" lay-verType='tips' class="layui-input ">
                     </div>
                 </div>                
                 <div class="layui-form-item">                
                     <label class="layui-form-label">系统版本号 :</label>
                     <div class="layui-input-block">
-                        <span v-if="status">{{info.version}}</span>
-                        <input v-else type="text" name="version" v-model="systemInfo.version" lay-verify="required|version" autocomplete="off" placeholder="请输入系统版本号" lay-verType='tips' class="layui-input">
+                        <!-- <span v-if="status">{{info.version}}</span> -->
+                        <input type="text" name="version" :readonly="status" v-model="systemInfo.version" lay-verify="required|version" autocomplete="off" placeholder="请输入系统版本号" lay-verType='tips' class="layui-input">
                     </div>
                 </div>                
                 <div class="layui-form-item">                
                     <label class="layui-form-label">展示顺序 :</label>
                     <div class="layui-input-block">
-                        <span v-if="status">{{info.order}}</span>
-                        <input v-else type="number" name="order" v-model="systemInfo.order" lay-verify="required" autocomplete="off" placeholder="请输入展示顺序" lay-verType='tips' class="layui-input">
+                        <!-- <span v-if="status">{{info.order}}</span> -->
+                        <input type="text" name="order" :readonly="status" v-model="systemInfo.order" lay-verify="required|number" autocomplete="off" placeholder="请输入展示顺序" lay-verType='tips' class="layui-input">
                     </div>
                 </div>                
                 <div class="layui-form-item">                
                     <label class="layui-form-label">起始页面 :</label>
                     <div class="layui-input-block">
-                        <span v-if="status">{{info.startPage}}</span>
-                        <input v-else type="text" name="startPage" v-model="systemInfo.startPage" lay-verify="required" autocomplete="off" placeholder="请输入起始页面" lay-verType='tips' class="layui-input">
+                        <!-- <span v-if="status">{{info.startPage}}</span> -->
+                        <input type="text" name="startPage" :readonly="status" v-model="systemInfo.startPage" lay-verify="required" autocomplete="off" placeholder="请输入起始页面" lay-verType='tips' class="layui-input">
                     </div>
                 </div> 
                 <div class="layui-form-item">
@@ -73,12 +73,12 @@ export default {
     },
     created(){
         if(JSON.stringify(this.$route.params)!='{}'){
-            this.info=this.$route.params.data
+            this.systemInfo=this.$route.params.data
             // console.log(this.info)
             if(this.$route.params.flag){
                 this.flag=this.$route.params.flag
                 this.title="子系统编辑"
-                this.systemInfo=this.info
+                // this.systemInfo=this.info
             }else{
                 this.status=true
                 this.title="子系统详情"
@@ -100,7 +100,7 @@ export default {
                 console.log(data.field)
                 this.$message.success('提交成功')
                 this.$router.push('/system')
-                
+                return false
             });
         },
         checkForm(form){
