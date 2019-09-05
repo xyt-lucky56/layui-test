@@ -9,8 +9,8 @@
                 <button class="layui-btn addbtn" @click="add">添加用户</button> 
                 <table class="layui-hide" lay-filter="test1" id="test1">
                     <div id="barDemo">
-                        <a class="layui-btn layui-btn-xs bgeditor" lay-event="jump">角色分配</a>
-                        <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
+                        <a class="layui-btn layui-btn-xs" lay-event="jump">角色分配</a>
+                        <a class="layui-btn layui-btn-xs bgeditor" lay-event="edit">编辑</a>
                         <a class="layui-btn layui-btn-xs bgwarn" lay-event="del">删除</a>
                     </div>
                 </table>
