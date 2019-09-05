@@ -5,12 +5,6 @@
             <div class="add-box">            
                 <button class="layui-btn addbtn" @click="add">添加角色</button>
             </div> 
-            <!-- <button class="layui-btn layui-btn-sm" @click="submit1">按钮一</button> 
-            <button class="layui-btn layui-btn-sm layui-btn-primary" @click="submit1">按钮一</button> 
-            <button class="layui-btn layui-btn-xs" @click="submit1">按钮一</button> 
-            <button class="layui-btn layui-btn-xs bg1" @click="submit1">按钮一</button> 
-            <button class="layui-btn layui-btn-xs bg2" @click="submit1">按钮一</button> 
-            <button class="layui-btn layui-btn-xs bg3" @click="submit1">按钮一</button>  -->
             <table class="layui-hide" lay-filter="tableRole" id="tableRole">
                 <div id="barDemo">
                     <a class="layui-btn layui-btn-xs bgdefault" lay-event="assign">权限分配</a>
@@ -19,18 +13,22 @@
                     <a class="layui-btn layui-btn-xs bgwarn" lay-event="del">删除</a>
                 </div>
             </table>
+            <!-- <script type="text/html" id="titleTpl">
+                <span>{{ d.systemName | filterSysName }}</span>
+            </script> -->
         </div>       
     </div>
 </template>
 <script>
 import FengunionTable from '@/utils/comTable'  //表格封装
+import { filterSysName } from "@/filter/groupList"
 export default {
     data(){
         return{
             cols:[[
                 {field:'ID', title: '编号', width:150, sort: true},
                 {field:'name', title: '角色名称'},
-                {field:'systemName', title: '系统名称'},
+                {field:'systemName', title: '系统名称', },
                 // {field:'version', title: '系统版本号'},
                 // {field:'startImgName', title: '启动图片名称'},
                 // {field:'noStartImgName', title: '不启动图片名称'},
@@ -40,13 +38,13 @@ export default {
                 {field:'note', title: '备注'},
                 {field:'status', title: '操作',toolbar: '#barDemo',width:260,fixed: 'right'},
             ]],
-            limit:5,
+            limit:10,
             limits:[5,7,10],
             data:[]
         }
     },
-    mounted(){
-        FengunionTable('tableRole', '/api/info/myTranferRecord', this.cols, {}, true,this.limit).then(e => {//表格初始化
+    mounted(){       
+        FengunionTable('tableRole', '/api/info/myTranferRecord', this.cols, {}, true,this.limit, 'get', filterSysName).then(e => {//表格初始化
             console.log(e)
         }) 
         layui.use(['table'], () => {
@@ -69,6 +67,8 @@ export default {
                 } else if (obj.event === 'edit') {
                     // layer.alert('编辑行：<br>' + JSON.stringify(data))
                     this.$router.push({name: 'subrole', query: { type: 'edit', data }});
+                } else if(obj.event === 'assign') {
+                    this.$router.push({ name: 'rolePower' })
                 }
             });
         },

@@ -4,6 +4,7 @@ import Vue from 'vue'
 import App from './App'
 import router from './router'
 import store from './store/index'
+import "@/filter/filter" //过滤函数
 import 'jquery'
 Vue.config.productionTip = false
 

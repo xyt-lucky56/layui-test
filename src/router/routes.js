@@ -97,6 +97,11 @@ export const routesList = [
             component: resolve => require(["@/views/roleManagement/subrole"], resolve),
         },
         {
+            path: '/admin/rolePower',
+            name: 'rolePower',
+            component: resolve => require(["@/views/roleManagement/rolePower"], resolve),
+        },
+        {
             path: '/admin/permissions',
             name: 'permissions',
             component: resolve => require(["@/views/permissions/permissions"], resolve),

@@ -21,3 +21,21 @@ export const sysnameList = [
     { val: "stock ", label: "库存管理系统" }
 ]
 
+export const filterSysName = function(){
+    $("[data-field = 'systemName']").children().each(function(){
+        var val = $(this).text();
+        if(val === 'operational'){                          
+            $(this).text("运营平台");
+        }else if(val === 'order'){
+            
+            $(this).text("订单管理系统");
+        }else if(val === 'finance'){
+            
+            $(this).text("财务管理系统");
+        }else if(val === 'stock'){
+            $(this).text("发库存管理系统布");
+            
+        }
+        
+    })
+}

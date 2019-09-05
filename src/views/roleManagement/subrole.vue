@@ -6,29 +6,33 @@
                 <div class="layui-form-item">                
                     <label class="layui-form-label">角色名称：</label>
                     <div class="layui-input-block">
-                        <input type="text" name="name" lay-verify="required" autocomplete="off" placeholder="请输入角色名称" lay-verType='tips' class="layui-input inp titleInp" readonly>
+                        <input type="text" name="name" lay-verify="required" autocomplete="off" placeholder="请输入角色名称" lay-verType='tips' class="layui-input inp titleInp" :readonly="isreadonly">
                     </div>
                 </div>
                 <div class="layui-form-item">                
                     <label class="layui-form-label">系统名称：</label>
                     <div class="layui-input-block">
                         <select name="systemName" lay-verify="required">
-                            <option value="">请选择系统名称</option>
-                            <option v-for="item in sysnameList" :key="item.val" :value="item.val">{{ item.label }}</option>
-                        </select>
+                            <option v-if="!isreadonly" value="" >请选择系统名称</option>
+                            <option v-for="item in sysnameList" :key="item.val" :value="item.val" :disabled="isreadonly">{{ item.label }}</option>
+                        </select>                 
                     </div>
                 </div>                
                 <div class="layui-form-item">                
                     <label class="layui-form-label">备注：</label>
                     <div class="layui-input-block">
-                        <textarea name="note" placeholder="请输入内容" class="layui-textarea"></textarea>
+                        <textarea name="note" placeholder="请输入内容" class="layui-textarea" :readonly="isreadonly"></textarea>
                     </div>
                 </div>
                 <div class="layui-form-item">
-                    <div class="layui-input-block submit">
-                        <button class="layui-btn addbtn" lay-submit="" lay-filter="subrole">保存</button>
-                        <button class="layui-btn layui-btn-primary addbtn" lay-submit="" lay-filter="demo2">取消</button>
+                    <div v-if="!isreadonly" class="layui-input-block submit">
+                        <div class="layui-btn addbtn" lay-submit="" lay-filter="subrole">确定</div>
+                        <div class="layui-btn layui-btn-primary addbtn" @click="goback">取消</div>
                     </div>
+                    <div v-else class="layui-input-block submit">                       
+                        <div class="layui-btn layui-btn-primary addbtn" @click="goback">返回</div>
+                    </div>
+                    
                 </div>                
             </form>
         </div>
@@ -85,6 +89,9 @@ export default {
                 , "systemName": this.roledata.systemName
                 , "note": this.roledata.note
             })
+        },
+        goback(){
+            this.$router.back(-1);
         }
     }
 }
@@ -92,6 +99,7 @@ export default {
 <style lang="less" scope>
     .subsystem{
         width: 80%;
+        text-align: center;
         h1{
             margin-top: 50px;
         }
