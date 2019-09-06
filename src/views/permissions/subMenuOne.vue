@@ -1,18 +1,18 @@
 <template>
     <div class="subMenuOne">
-        <h1>添加一级菜单</h1>
+        <h1>{{title}}</h1>
         <div class="content">
-            <form class="layui-form menuOne" action="">
+            <form class="layui-form menuOne" action="" lay-filter="example">
                 <div class="layui-form-item">                
                     <label class="layui-form-label">菜单名称 :</label>
                     <div class="layui-input-block">
-                        <input type="text" name="menu" :readonly="status" lay-verify="required" autocomplete="off" placeholder="请输入菜单名称" lay-verType='tips' class="layui-input">
+                        <input type="text" name="menuName" lay-verify="required" autocomplete="off" placeholder="请输入菜单名称" lay-verType='tips' class="layui-input">
                     </div>
                 </div>
                 <div class="layui-form-item">                
                     <label class="layui-form-label">界面类型 :</label>
                     <div class="layui-input-block">
-                        <select name="InterfaceType" lay-verify="required" v-model="info.InterfaceType">
+                        <select name="viewType" lay-verify="required">
                             <option v-for="(item,index) in viewList" :key='index' :value="item.val">{{item.label}}</option>
                         </select>
                     </div>
@@ -20,7 +20,7 @@
                 <div class="layui-form-item">                
                     <label class="layui-form-label">权限类型 :</label>
                     <div class="layui-input-block">
-                        <select name="roleType" lay-verify="required" v-model="info.roleType">
+                        <select name="powerType" lay-verify="required">
                             <option v-for="(item,index) in roleTypes" :key='index' :value="item.val">{{item.label}}</option>
                         </select>
                     </div>
@@ -28,19 +28,19 @@
                 <div class="layui-form-item">                
                     <label class="layui-form-label">图片名称 :</label>
                     <div class="layui-input-block">
-                        <input type="text" name="imgName" :readonly="status" lay-verify="required" autocomplete="off" placeholder="请输入图片名称" lay-verType='tips' class="layui-input">
+                        <input type="text" name="imgName" lay-verify="required" autocomplete="off" placeholder="请输入图片名称" lay-verType='tips' class="layui-input">
                     </div>
                 </div>
                 <div class="layui-form-item">                
                     <label class="layui-form-label">相对文件名称 :</label>
                     <div class="layui-input-block">
-                        <input type="text" name="relativeDoc" :readonly="status" lay-verify="required" autocomplete="off" placeholder="请输入相对文件名称" lay-verType='tips' class="layui-input">
+                        <input type="text" name="relativeFileName" lay-verify="required" autocomplete="off" placeholder="请输入相对文件名称" lay-verType='tips' class="layui-input">
                     </div>
                 </div>
                 <div class="layui-form-item">                
                     <label class="layui-form-label">菜单描述 :</label>
                     <div class="layui-input-block">
-                        <textarea name='menuDescription' placeholder="请输入内容" class="layui-textarea"></textarea>
+                        <textarea name='menuDisc' placeholder="请输入内容" class="layui-textarea"></textarea>
                     </div>
                 </div>                
                 <div class="layui-form-item">
@@ -52,7 +52,7 @@
                     </div>
                 </div>  
             </form>
-            <fieldset class="layui-elem-field layui-field-title">
+            <fieldset class="layui-elem-field layui-field-title" v-if='status'>
                 <legend>子菜单列表</legend>
                 <div class="layui-field-box">  
                     <table class="layui-hide" lay-filter="menuOneTest" id="menuOneTest">
@@ -72,6 +72,7 @@ import FengunionTable from '@/utils/comTable'//表格封装
 export default {
     data(){
         return{
+            title:'添加一级菜单',
             info:{},
             viewList:viewList,
             roleTypes:roleTypes,
@@ -87,19 +88,62 @@ export default {
                 {field:'menuDisc', title: '菜单描述'},
                 {field:'status', title: '操作',toolbar: '#barDemo',width:200,fixed: 'right'},
             ]],
-            limit:5
+            limit:5,
+        }
+    },
+    created(){
+        if(JSON.stringify(this.$route.params)!='{}'){
+            this.info=this.$route.params.data
+            // console.log(this.info)
+            this.status=true   
+            this.title='菜单编辑'         
         }
     },
     mounted(){
-        FengunionTable('menuOneTest', '/api/permission/subMentuOne', this.cols, {}, true,this.limit).then(e => {//表格初始化
-            // console.log(e)
-        }) 
-        layui.use(['form'], ()=>{
-            var form = layui.form
+        if(this.status){
+            FengunionTable('menuOneTest', '/api/permission/subMentuOne', this.cols, {}, true,this.limit).then(e => {//表格初始化
+                // console.log(e)
+            }) 
+        }
+        layui.use(['form','table'], ()=>{
+            var form = layui.form,
+            table=layui.table
             form.render()
+            form.val('example', {
+                'menuName':this.info.menuName,
+                'viewType':this.info.viewType,
+                'powerType':this.info.powerType,
+                'relativeFileName':this.info.relativeFileName,
+                'menuDisc':this.info.menuDisc,
+            })
+            this.formSubmit(form)
+            this.statusChange(table)
         })
     },
     methods:{
+        formSubmit(form){
+            //监听提交
+            form.on('submit(demo1)', (data)=>{
+                console.log(data.field)
+                this.$message.success('提交成功')
+                // this.$router.push('/permissions')
+                return false
+            });
+        },
+        statusChange(table){
+            table.on('tool(menuOneTest)', (obj)=>{
+                var data = obj.data//得到所在行所有键值
+                    console.log(data)
+                if(obj.event === 'edit'){//编辑
+                    this.$router.push({name:'subMenuChild',params:{data}});
+                }else if(obj.event === 'del'){
+                    layer.confirm('真的删除行么', function(index){
+                        obj.del();
+                        layer.close(index);
+                    });
+                }
+            });
+        },
         cancel(){
             this.$router.back(-1);
         }

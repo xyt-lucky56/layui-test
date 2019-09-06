@@ -66,7 +66,7 @@ export default {
                 accordion: true,//手风琴模式                
                 click: function(obj){
                     let data = obj.data;  //获取当前点击的节点数据
-                    console.log(data)
+                    console.log(data)                    
                     if(data.title=='平台事业部'){
                         table.reload('test1', {
                             url: '/api/user/tableInfo'
@@ -103,28 +103,7 @@ export default {
                         layer.close(index);
                     });
                 }else if(obj.event === 'jump'){
-                    this.$router.push('/admin/roleassignment')
-                    // layer.open({
-                    //     type: 6,   // 6可以使表单超出部分不被遮挡
-                    //     title: '角色分配',
-                    //     area: '400px',
-                    //     btn: ['确认', '取消'],
-                    //     btnAlign: 'c',   // 按钮居中
-                    //     content: $('#bindPage').html(),
-                    //     success: (layero, index) => {
-                    //         this.tree.render({
-                    //             elem: '#test2',
-                    //             data:this.data1,
-                    //             click: function(obj){
-                    //                 let data = obj.data;  //获取当前点击的节点数据
-                    //                 console.log(data)
-                    //             }
-                    //         })
-                    //     },
-                    //     yes: (index, layero)=>{
-                    //         layer.close(index);
-                    //     }
-                    // });
+                    this.$router.push('/admin/roleassignment')                   
                 }
             })
         }

@@ -30,15 +30,24 @@ export default {
         }
     },
     mounted(){
-        layui.use(['tree'], ()=>{
-            var tree = layui.tree
+        layui.use(['tree','jquery'], ()=>{
+            var tree = layui.tree,
+            $=layui.jquery
             tree.render({
                 elem: '#test2',
                 data:this.data,
                 showLine: false,  //是否开启连接线
                 accordion: true,//手风琴模式                
                 click: (obj)=>{
-                    this.info = obj.data;  //获取当前点击的节点数据                    
+                    // console.log(obj)
+                    if(!obj.data.children){
+                        this.info={}
+                        this.info = obj.data;  //获取当前点击的节点数据   
+                        $('div.layui-tree-set').each(function(){
+                            $(this)[0].style.backgroundColor=''
+                        })
+                        obj.elem[0].style.backgroundColor='#6565'
+                    }
                 }
             }) 
         })
@@ -84,5 +93,8 @@ export default {
                 margin:0 165px;
             }
         }
+    }
+    .tree-active{
+        background: #6565;
     }
 </style>
