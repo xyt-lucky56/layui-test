@@ -11,7 +11,7 @@
             <button class="layui-btn layui-btn-xs bg3" @click="submit1">按钮一</button>  -->
             <table class="layui-hide" lay-filter="test" id="test">
                 <div id="barDemo">
-                    <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
+                    <a class="layui-btn layui-btn-xs bgeditor" lay-event="edit">编辑</a>
                     <a class="layui-btn layui-btn-xs bgdetail" lay-event="detail">详情</a>
                     <a class="layui-btn layui-btn-xs bgwarn" lay-event="del">删除</a>
                 </div>

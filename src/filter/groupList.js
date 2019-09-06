@@ -61,3 +61,9 @@ export const filterViewType = function(){
         }       
     })
 }
+
+export const roleTypes=[
+    { val: "button", label: "button" },
+    { val: "authory", label: "authory" },
+    { val: "item", label: "item" },
+]
