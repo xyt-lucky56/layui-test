@@ -3,13 +3,18 @@
         <h1>权限管理</h1>
         <div class="content">
             <div class="content-left left">
+                <div class="layui-form">
+                    <select name="systemName" lay-verify="" lay-filter="myselect">
+                        <option v-for="item in sysnameList" :key="item.val" :value="item.val">{{ item.label }}</option>
+                    </select>                 
+                </div>
                 <div id="classtree" class="demo-tree"></div>
             </div>
             <div class="content-right left">
-                <button class="layui-btn addbtn" @click="addMenu">添加一级菜单</button> 
+                <button class="layui-btn addbtn" @click="addMenu">{{showChildTable? '添加子菜单' : '添加一级菜单'}}</button> 
                 <table class="layui-hide" lay-filter="test1" id="test1">
                     <div id="barDemo">
-                        <a class="layui-btn layui-btn-xs" lay-event="jump">添加子菜单</a>
+                        <a v-show="!showChildTable" class="layui-btn layui-btn-xs" lay-event="jump">添加子菜单</a>
                         <a class="layui-btn layui-btn-xs bgeditor" lay-event="edit">编辑</a>
                         <a class="layui-btn layui-btn-xs bgwarn" lay-event="del">删除</a>
                     </div>
@@ -20,10 +25,11 @@
 </template>
 <script>
 import FengunionTable from '@/utils/comTable'//表格封装
-import { filterViewType } from "@/filter/groupList"
+import { sysnameList, filterViewType } from "@/filter/groupList"
 export default {
     data() {
         return {
+            sysnameList,
             tree: null,
             table: null,
             treedata: [{               
@@ -52,20 +58,24 @@ export default {
             ]],
             limit:10,
             limits:[5,7,10],
+            showChildTable: false
         }
     },
     mounted() {
-        layui.use('tree', () => {
+        layui.use(['tree', 'table', 'form'], () => {
+            layui.form.render();
+            layui.form.on('select(myselect)', (data) => {
+                // console.log(data);
+                this.reloadData(data.value);
+            })
             var tree = layui.tree;
             this.showtree(layui.tree);
-            this.tree = tree;            
+            this.tree = tree;  
+            this.editorBtn(layui.table)
+            this.table = layui.table;    
         });
         FengunionTable('test1', '/api/permission/permissionList', this.cols, {}, true,this.limit, 'get', filterViewType).then(e => {//表格初始化
             console.log(e)
-        })
-        layui.use('table', () => {
-            this.editorBtn(layui.table)
-            this.table = layui.table;
         })
     },
     methods: {
@@ -74,16 +84,48 @@ export default {
                 elem: '#classtree'
                 ,id: 'classtree'
                 ,data: this.treedata
-                ,click: function(obj){
+                ,click: (obj) => {
                     console.log(obj.data); //得到当前点击的节点数据
                     let params = {id: obj.data.id}
                     console.log(params);
-                    table.reload('test1', {
+                    this.table.reload('test1', {
+                        url: '/api/permission/permissionList'
+                        ,where: params //设定异步数据接口的额外参数
+                    });
+
+                    if(obj.data.children){
+                        this.showChildTable = false;
+                    }else{
+                        this.showChildTable = true;
+                    }
+                }
+            })
+        },
+        // 下拉选择后重载数据
+        reloadData(val){
+            let params = { id: val }
+
+            this.tree.reload('classtree',{
+                elem: '#classtree'
+                ,data: this.treedata
+                ,click: (obj) => {
+                    console.log(obj.data); //得到当前点击的节点数据
+                    let params = {id: obj.data.id}
+                    console.log(params);
+                    this.table.reload('test1', {
                         url: '/api/permission/permissionList'
                         ,where: params //设定异步数据接口的额外参数
                     });
                 }
             })
+            // console.log(this.treedata);
+            let param = {id: this.treedata[0].children[0].id }
+            console.log(param);
+            this.table.reload('test1', {
+                url: '/api/permission/permissionList'
+                ,where: params //设定异步数据接口的额外参数
+            });
+
         },
         // 监听表格操作按钮  (要想按钮触发此事件，需添加lay-event)
         editorBtn(table) {
@@ -95,15 +137,23 @@ export default {
                         obj.del();
                     })
                 } else if (obj.event === 'edit') {
-                    // layer.alert('编辑行：<br>' + JSON.stringify(data))
-                    this.$router.push({name: 'subMenuOne', params: { data }});
+                    if(this.showChildTable){
+                        this.$router.push({name: 'subMenuChild', params: { data }});
+                    }else{
+                        this.$router.push({name: 'subMenuOne', params: { data }});
+                    }
+                    
                 } else if(obj.event === 'jump') {
                     this.$router.push({ name: 'subMenuChild' })
                 }
             });
         },
         addMenu() {
-            this.$router.push({name: "subMenuOne"});
+            if(this.showChildTable){
+                this.$router.push({ name: 'subMenuChild' });
+            }else{
+                this.$router.push({name: "subMenuOne"});;
+            }            
         }
     }
 }
@@ -119,8 +169,12 @@ export default {
         text-align: left;
         overflow: hidden;
         .content-left{
-            width: 10%; 
-            height: 100%;               
+            width: 15%; 
+            height: 100%; 
+            .layui-form {
+                width: 80%;
+                margin-bottom: 20px;
+            }              
         }
         .content-right{
             width: 80%;
