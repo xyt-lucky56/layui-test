@@ -67,8 +67,39 @@ const postData2 = req => {
     count:20
   }
 }
+const roleData = req => {  
+  // console.log(req) // 请求体，用于获取参数
+  let data = [] // 用于存放文章数据的数组
+  let items=10
+  if(req.url.indexOf('?')!=-1){//获取分页页码
+    items=req.url.split('&')[1].split('=')[1]
+  }
+  
+  for (let i = 0; i < items; i++) {
+    let post = {
+        ID: i+1,
+        menuName: '订单新增',
+        viewType: 'bs',
+        powerType: 'item',
+        imgName: 'add.jpg',
+        relativePath: '/userInfo',
+        relativeFileName: 'add.html', 
+        menuDisc: Random.ctitle(3, 20)
+    }
+
+    data.push(post)
+  }
+  
+  // 返回状态码和文章数据posts
+  return {
+    code,
+    data,
+    count:10
+  }
+}
 
 // 定义请求链接，类型，还有返回数据
 Mock.mock(RegExp("/api/info/myTranferRecord"+".*"), 'get', postData1);
 
 Mock.mock(RegExp("/api/permission/permissionList"+".*"), 'get', postData2);
+Mock.mock(RegExp("/api/permission/subMentuOne"+".*"), 'get', roleData);
