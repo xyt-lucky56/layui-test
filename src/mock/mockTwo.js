@@ -52,6 +52,7 @@ const postData2 = req => {
         menuName: '订单管理',
         powerType: 'item',
         relativePath: '/info',
+        imgName: 'add',
         relativeFileName: 'permissions', // 随机生成长度为10-25的标题
         viewType: 'bs', 
         menuDisc: Random.ctitle(3, 20)

@@ -85,9 +85,17 @@ export default {
                 ,id: 'classtree'
                 ,data: this.treedata
                 ,click: (obj) => {
-                    console.log(obj.data); //得到当前点击的节点数据
+                    // console.log(obj.elem); //得到当前节点元素 
+                    $('div.layui-tree-set').each(function() {
+                        $(this).removeClass("bgdetail");
+                    })  
+                    if(!obj.data.children){  
+                        obj.elem.addClass("bgdetail");
+                    }
+
+                    // console.log(obj.data); //得到当前点击的节点数据
                     let params = {id: obj.data.id}
-                    console.log(params);
+                    // console.log(params);
                     this.table.reload('test1', {
                         url: '/api/permission/permissionList'
                         ,where: params //设定异步数据接口的额外参数
