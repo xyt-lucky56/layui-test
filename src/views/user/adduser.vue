@@ -2,12 +2,12 @@
     <div class="adduser">
         <h1>{{title}}</h1>
         <div class="content">
-            <form class="layui-form" action="">
+            <form class="layui-form" action="" lay-filter="example">
                 <div class="layui-form-item"> 
                     <div class="layui-inline">
                         <label class="layui-form-label">用户名 :</label>
                         <div class="layui-input-inline">
-                            <input type="text" name="username" v-model="info.username" placeholder="请输入用户名" lay-verify="required" lay-verType='tips' autocomplete="off" class="layui-input">
+                            <input type="text" name="username" placeholder="请输入用户名" lay-verify="required" lay-verType='tips' autocomplete="off" class="layui-input">
                         </div>
                     </div>
                     <div class="layui-inline">
@@ -21,13 +21,13 @@
                     <div class="layui-inline">
                         <label class="layui-form-label">姓名 :</label>
                         <div class="layui-input-inline">
-                            <input type="text" name="name" placeholder="请输入姓名" v-model="info.name" lay-verify="required|name" lay-verType='tips' autocomplete="off" class="layui-input">
+                            <input type="text" name="name" placeholder="请输入姓名" lay-verify="required|name" lay-verType='tips' autocomplete="off" class="layui-input">
                         </div>
                     </div>
                     <div class="layui-inline">
                         <label class="layui-form-label">电子邮箱 :</label>
                         <div class="layui-input-inline">
-                            <input type="text" name="email" placeholder="请输入电子邮箱" v-model="info.email" lay-verify="required|email" lay-verType='tips' autocomplete="off" class="layui-input">
+                            <input type="text" name="email" placeholder="请输入电子邮箱" lay-verify="required|email" lay-verType='tips' autocomplete="off" class="layui-input">
                         </div>
                     </div>
                 </div>
@@ -41,7 +41,7 @@
                     <div class="layui-inline">
                         <label class="layui-form-label">地址 :</label>
                         <div class="layui-input-inline">
-                            <input type="text" name="address" placeholder="地址" v-model="info.address" lay-verify="required" lay-verType='tips' autocomplete="off" class="layui-input">
+                            <input type="text" name="address" placeholder="地址" lay-verify="required" lay-verType='tips' autocomplete="off" class="layui-input">
                         </div>
                     </div>
                 </div>
@@ -49,13 +49,13 @@
                     <div class="layui-inline">
                         <label class="layui-form-label">手机号 :</label>
                         <div class="layui-input-inline">
-                            <input type="tel" name="phone" placeholder="请输入手机号" v-model="info.phone" lay-verify="required|phone" lay-verType='tips' autocomplete="off" class="layui-input">
+                            <input type="tel" name="phone" placeholder="请输入手机号" lay-verify="required|phone" lay-verType='tips' autocomplete="off" class="layui-input">
                         </div>
                     </div>
                     <div class="layui-inline">
                         <label class="layui-form-label">邮政编码 :</label>
                         <div class="layui-input-inline">
-                            <input type="text" name="zipcode" placeholder="邮政编码" v-model="info.zipcode" lay-verify="required|zipcode" lay-verType='tips' autocomplete="off" class="layui-input">
+                            <input type="text" name="zipcode" placeholder="邮政编码" lay-verify="required|zipcode" lay-verType='tips' autocomplete="off" class="layui-input">
                         </div>
                     </div>
                 </div>
@@ -63,13 +63,13 @@
                     <div class="layui-inline">
                         <label class="layui-form-label">联系电话 :</label>
                         <div class="layui-input-inline">
-                            <input type="tel" name="phoneNumber" placeholder="请输入联系电话" v-model="info.phoneNumber" lay-verify="required|phoneNumber" lay-verType='tips' autocomplete="off" class="layui-input">
+                            <input type="tel" name="phoneNumber" placeholder="请输入联系电话" lay-verify="required|phoneNumber" lay-verType='tips' autocomplete="off" class="layui-input">
                         </div>
                     </div>
                     <div class="layui-inline">
                         <label class="layui-form-label">用户类型 :</label>
                         <div class="layui-input-inline">
-                            <select name="userType" lay-verify="required" v-model="info.userType">
+                            <select name="userType" lay-verify="required">
                                 <!-- <option value="">直接选择或搜索选择</option> -->
                                 <option v-for="(item,index) in userTypes" :key='index' :value="item.type">{{item.type}}</option>
                             </select>
@@ -80,7 +80,7 @@
                     <div class="layui-inline">
                         <label class="layui-form-label">所属部门 :</label>
                         <div class="layui-input-inline">
-                            <select name="department" lay-verify="required" v-model="info.department">
+                            <select name="department" lay-verify="required">
                                 <option v-for="(item,index) in departments" :key='index' :value="item.title">{{item.title}}</option>
                             </select>
                         </div>
@@ -134,6 +134,18 @@ export default {
         layui.use(['form'], ()=>{
             var form = layui.form
             form.render()
+            //表单初始赋值
+            form.val('example', {
+                'username':this.info.username,
+                'name':this.info.name,
+                'email':this.info.email,
+                'address':this.info.address,
+                'phone':this.info.phone,
+                'zipcode':this.info.zipcode,
+                'phoneNumber':this.info.phoneNumber,
+                'userType':this.info.userType,
+                'department':this.info.department,
+            })
             this.formSubmit(form)
             this.checkForm(form)
         })
