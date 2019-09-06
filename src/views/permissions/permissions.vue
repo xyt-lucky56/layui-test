@@ -26,14 +26,18 @@ export default {
         return {
             tree: null,
             table: null,
-            treedata: [{
+            treedata: [{               
                 title: '订单管理系统'
+                ,id: 1
                 ,children:[{
                     title: "订单管理"
+                    ,id: 2
                 },{
                     title: "订单配送"
+                    ,id: 3
                 },{
                     title: "订单统计"
+                    ,id: 4
                 }]
             }],
             cols:[[
@@ -54,14 +58,14 @@ export default {
         layui.use('tree', () => {
             var tree = layui.tree;
             this.showtree(layui.tree);
-            this.tree = tree;
-            
+            this.tree = tree;            
         });
         FengunionTable('test1', '/api/permission/permissionList', this.cols, {}, true,this.limit, 'get', filterViewType).then(e => {//表格初始化
             console.log(e)
         })
         layui.use('table', () => {
             this.editorBtn(layui.table)
+            this.table = layui.table;
         })
     },
     methods: {
@@ -72,10 +76,12 @@ export default {
                 ,data: this.treedata
                 ,click: function(obj){
                     console.log(obj.data); //得到当前点击的节点数据
-                    console.log(obj.state); //得到当前节点的展开状态：open、close、normal
-                    console.log(obj.elem); //得到当前节点元素
-                    
-                    console.log(obj.data.children); //当前节点下是否有子节点
+                    let params = {id: obj.data.id}
+                    console.log(params);
+                    table.reload('test1', {
+                        url: '/api/permission/permissionList'
+                        ,where: params //设定异步数据接口的额外参数
+                    });
                 }
             })
         },
@@ -90,7 +96,7 @@ export default {
                     })
                 } else if (obj.event === 'edit') {
                     // layer.alert('编辑行：<br>' + JSON.stringify(data))
-                    this.$router.push({name: 'subMenuOne', query: { data }});
+                    this.$router.push({name: 'subMenuOne', params: { data }});
                 } else if(obj.event === 'jump') {
                     this.$router.push({ name: 'subMenuChild' })
                 }

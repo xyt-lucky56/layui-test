@@ -59,14 +59,14 @@ export default {
                 var data = obj.data;
                 if (obj.event === 'detail') {
                     // this.$message.success('恭喜您，打开成功')
-                    this.$router.push({name: 'subrole', query: { type: 'detail', data }});
+                    this.$router.push({name: 'subrole', params: { type: 'detail', data }});
                 } else if (obj.event === 'del') {
                     this.$message.confirm('真的删除行么').then(() => {
                         obj.del();
                     })
                 } else if (obj.event === 'edit') {
                     // layer.alert('编辑行：<br>' + JSON.stringify(data))
-                    this.$router.push({name: 'subrole', query: { type: 'edit', data }});
+                    this.$router.push({name: 'subrole', params: { type: 'edit', data }});
                 } else if(obj.event === 'assign') {
                     this.$router.push({ name: 'rolePower' })
                 }

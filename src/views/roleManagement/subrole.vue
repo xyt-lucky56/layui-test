@@ -49,10 +49,10 @@ export default {
         }
     },
     created() {
-        if(this.$route.query.data){
-            console.log(this.$route.query);
-            this.roledata = this.$route.query.data;
-            if(this.$route.query.type === 'detail'){
+        if(this.$route.params.data){
+            // console.log(this.$route.params);
+            this.roledata = this.$route.params.data;
+            if(this.$route.params.type === 'detail'){
                 this.isreadonly = true;
             }
         }
