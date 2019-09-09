@@ -70,7 +70,7 @@
                         <label class="layui-form-label">用户类型 :</label>
                         <div class="layui-input-inline">
                             <select name="userType" lay-verify="required">
-                                <!-- <option value="">直接选择或搜索选择</option> -->
+                                <option value="">请选择用户类型</option>
                                 <option v-for="(item,index) in userTypes" :key='index' :value="item.type">{{item.type}}</option>
                             </select>
                         </div>
@@ -81,6 +81,7 @@
                         <label class="layui-form-label">所属部门 :</label>
                         <div class="layui-input-inline">
                             <select name="department" lay-verify="required">
+                                <option value="">请选择所属部门</option>
                                 <option v-for="(item,index) in departments" :key='index' :value="item.title">{{item.title}}</option>
                             </select>
                         </div>

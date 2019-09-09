@@ -44,9 +44,9 @@ export default {
                         this.info={}
                         this.info = obj.data;  //获取当前点击的节点数据   
                         $('div.layui-tree-set').each(function(){
-                            $(this)[0].style.backgroundColor=''
+                            $(this).removeClass('tree-active')
                         })
-                        obj.elem[0].style.backgroundColor='#6565'
+                        obj.elem.addClass('tree-active')
                     }
                 }
             }) 

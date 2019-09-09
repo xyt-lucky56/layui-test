@@ -15,11 +15,7 @@
                     </div>
                 </table>
             </div>
-        </div>
-        <!-- 弹窗中的树形组件 -->
-        <!-- <div id='bindPage' class="layui-hide">
-            <div id="test2" class="demo-tree"></div>
-        </div> -->
+        </div>       
     </div>
 </template>
 <script>
@@ -122,7 +118,10 @@ export default {
             overflow: hidden;
             .content-left{
                 width: 10%; 
-                height: 100%;               
+                height: 100%;
+                // .layui-icon-file{//树形组件图标隐藏
+                //     display: none;
+                // }               
             }
             .content-right{
                 width:85%;

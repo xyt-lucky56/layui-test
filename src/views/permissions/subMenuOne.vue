@@ -6,13 +6,14 @@
                 <div class="layui-form-item">                
                     <label class="layui-form-label">菜单名称 :</label>
                     <div class="layui-input-block">
-                        <input type="text" name="menuName" lay-verify="required" autocomplete="off" placeholder="请输入菜单名称" lay-verType='tips' class="layui-input">
+                        <input type="text" name="menuName" lay-verify="required|menuName" autocomplete="off" placeholder="请输入菜单名称" lay-verType='tips' class="layui-input">
                     </div>
                 </div>
                 <div class="layui-form-item">                
                     <label class="layui-form-label">界面类型 :</label>
                     <div class="layui-input-block">
                         <select name="viewType" lay-verify="required">
+                            <option value="">请选择界面类型</option>
                             <option v-for="(item,index) in viewList" :key='index' :value="item.val">{{item.label}}</option>
                         </select>
                     </div>
@@ -21,6 +22,7 @@
                     <label class="layui-form-label">权限类型 :</label>
                     <div class="layui-input-block">
                         <select name="powerType" lay-verify="required">
+                            <option value="">请选择权限类型</option>
                             <option v-for="(item,index) in roleTypes" :key='index' :value="item.val">{{item.label}}</option>
                         </select>
                     </div>
@@ -28,7 +30,7 @@
                 <div class="layui-form-item">                
                     <label class="layui-form-label">图片名称 :</label>
                     <div class="layui-input-block">
-                        <input type="text" name="imgName" lay-verify="required" autocomplete="off" placeholder="请输入图片名称" lay-verType='tips' class="layui-input">
+                        <input type="text" name="imgName" lay-verify="required|imgName" autocomplete="off" placeholder="请输入图片名称" lay-verType='tips' class="layui-input">
                     </div>
                 </div>
                 <div class="layui-form-item">                
@@ -40,7 +42,7 @@
                 <div class="layui-form-item">                
                     <label class="layui-form-label">菜单描述 :</label>
                     <div class="layui-input-block">
-                        <textarea name='menuDisc' placeholder="请输入内容" class="layui-textarea"></textarea>
+                        <textarea name='menuDisc' lay-verify="required" placeholder="请输入内容" class="layui-textarea"></textarea>
                     </div>
                 </div>                
                 <div class="layui-form-item">
@@ -113,11 +115,13 @@ export default {
                 'menuName':this.info.menuName,
                 'viewType':this.info.viewType,
                 'powerType':this.info.powerType,
+                'imgName':this.info.imgName,
                 'relativeFileName':this.info.relativeFileName,
                 'menuDisc':this.info.menuDisc,
             })
             this.formSubmit(form)
             this.statusChange(table)
+            this.checkForm(form)
         })
     },
     methods:{
@@ -129,6 +133,12 @@ export default {
                 // this.$router.push('/permissions')
                 return false
             });
+        },
+        checkForm(form){
+            form.verify({                
+                menuName:[/^[\u2E80-\u9FFF]+$/,'菜单名称不合法'],
+                imgName:[/[^\s]+\.(jpg|jpeg|gif|png|bmp)/i,'图片名称不合法'],
+            })
         },
         statusChange(table){
             table.on('tool(menuOneTest)', (obj)=>{
