@@ -67,3 +67,11 @@ export const roleTypes=[
     { val: "authory", label: "authory" },
     { val: "item", label: "item" },
 ]
+
+export const filterData = function(value){
+    if(value&&value!=null){
+        return value
+    }else{
+        return '--'
+    }
+}

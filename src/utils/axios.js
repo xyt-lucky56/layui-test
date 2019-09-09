@@ -6,17 +6,18 @@ axios.defaults.baseURL = process.env.NODE_ENV == 'development'?'/api':''
 // axios.defaults.headers.common['token'] = localstorage.getItem('token'); //设置请求头，这个是不是必须的
 
 export default function (url, params, method = 'get', type = "json") {
+    let headers = {};
 
     //设置请求头
     if (method == "post") {
         if (type = "json") {  //参数是json类型
-            axios.defaults.headers.post['Content-type'] = 'application/json'
+            axios.defaults.headers.post['Content-type'] = 'application/json';   
         } else {  //参数是字符串类型
             axios.defaults.headers.post['Content-type'] = 'application/x-www-form-urlencoded'
             params = Qs.stringify(params)
-        }
+        }            
     }
-
+    
     //当出现某些情况的时候设置请求拦截
     axios.interceptors.response.use(response => {
         if (response.data.statusCode == 20009) {  //这里的状态码是根据后台设置的来
@@ -35,6 +36,7 @@ export default function (url, params, method = 'get', type = "json") {
             type,
             data: params,
             timeout: 6000,
+            headers:headers
         }).then(result => {
             resolve(result.data)
         }).catch(err => {

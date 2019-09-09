@@ -20,21 +20,29 @@
     </div>
 </template>
 <script>
+import { filterData } from '@/filter/groupList'
 import FengunionTable from '@/utils/comTable'//表格封装
+import { delSubsystem } from '@/api/api'
 export default {
     data(){
         return{
             cols:[[
-                {field:'ID', title: 'ID',width:80,sort: true,fixed: 'left'},
-                {field:'name', title: '系统名称',width:150,fixed: 'left'},
-                {field:'describe', title: '系统描述'},
-                {field:'version', title: '系统版本号'},
-                {field:'startImgName', title: '启动图片名称'},
-                {field:'noStartImgName', title: '不启动图片名称'},
-                {field:'imgPath', title: '图片路径'},
-                {field:'order', title: '展示顺序'},
-                {field:'startPage', title: '起始页面'},
-                {field:'note', title: '备注'},
+                {field:'id', title: 'ID',width:80,sort: true,fixed: 'left'},
+                {field:'systemname', title: '系统名称',width:150,fixed: 'left'},
+                {field:'systemcontent', title: '系统描述'},
+                {field:'versionno', title: '系统版本号'},
+                {field:'enabledpicname', title: '启动图片名称',templet:function(res){
+                    return filterData(res.enabledpicname)
+                }},
+                {field:'disabledpicname', title: '不启动图片名称',templet:function(res){
+                    return filterData(res.disabledpicname)
+                }},
+                {field:'picurl', title: '图片路径',templet:function(res){
+                    return filterData(res.picurl)
+                }},
+                {field:'sortno', title: '展示顺序'},
+                {field:'initpage', title: '起始页面'},
+                {field:'remark', title: '备注'},
                 {field:'status', title: '操作',toolbar: '#barDemo',width:200,fixed: 'right'},
             ]],
             limit:10,
@@ -42,8 +50,8 @@ export default {
         }
     },
     mounted(){
-        FengunionTable('test', '/api/user/systemRecord', this.cols, {}, true,this.limit).then(e => {//表格初始化
-            // console.log(e)
+        FengunionTable('test', 'api/system/querySystemInfo', this.cols, {}, true,this.limit).then(e => {//表格初始化
+            console.log(e)
         })    
         layui.use(['table'], ()=>{
             var table=layui.table
@@ -64,8 +72,15 @@ export default {
                     this.$router.push({name:'subsystem',params:{data}});
                 }else if(obj.event === 'del'){
                     layer.confirm('真的删除行么', function(index){
-                        obj.del();
-                        layer.close(index);
+                        // console.log(data)
+                        let params={
+                            id:data.id
+                        }
+                        delSubsystem(params).then(res=>{
+                            console.log(res)
+                        })
+                        // obj.del();
+                        // layer.close(index);
                     });
                 } else if(obj.event === 'edit'){
                     this.$router.push({name:'subsystem',params:{data,flag:true}});

@@ -19,3 +19,12 @@ export const  roleInfo = function(params){
     return https(INFO, params,'get');
 }
 
+export const QUERYSYSTEMINFO = '/system/querySystemInfo'
+export const querySystemInfo = function(params){
+    return https(QUERYSYSTEMINFO, params,'get');
+}
+
+export const DELSUBSYSTEM='system/deleteSubsystems'
+export const delSubsystem = function(params){
+    return https(DELSUBSYSTEM, params,'post');
+}
