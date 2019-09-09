@@ -1,16 +1,16 @@
 <template>
     <div class="subMenuOne">
-        <h1>添加子菜单</h1>
+        <h1>{{ title }}</h1>
         <div class="content">
             <form class="layui-form menuOne" action="" lay-filter="formMenuChild">
                 <div class="layui-form-item">                
-                    <label class="layui-form-label">菜单名称 :</label>
+                    <label class="layui-form-label">菜单名称：</label>
                     <div class="layui-input-block">
                         <input type="text" name="menuName" lay-verify="required" autocomplete="off" placeholder="请输入菜单名称" lay-verType='tips' class="layui-input">
                     </div>
                 </div>
                 <div class="layui-form-item">                
-                    <label class="layui-form-label">界面类型 :</label>
+                    <label class="layui-form-label">界面类型：</label>
                     <div class="layui-input-block">
                         <select name="viewType" lay-verify="required" v-model="info.InterfaceType">
                             <option v-for="(item,index) in viewList" :key='index' :value="item.val">{{item.label}}</option>
@@ -18,7 +18,7 @@
                     </div>
                 </div>
                 <div class="layui-form-item">                
-                    <label class="layui-form-label">权限类型 :</label>
+                    <label class="layui-form-label">权限类型：</label>
                     <div class="layui-input-block">
                         <select name="powerType" lay-verify="required" v-model="info.roleType">
                             <option v-for="(item,index) in roleTypes" :key='index' :value="item.val">{{item.label}}</option>
@@ -26,25 +26,25 @@
                     </div>
                 </div>
                 <div class="layui-form-item">                
-                    <label class="layui-form-label">相对文件路径 :</label>
+                    <label class="layui-form-label">相对文件路径：</label>
                     <div class="layui-input-block">
                         <input type="text" name="relativePath" lay-verify="required" autocomplete="off" placeholder="请输入相对文件名称" lay-verType='tips' class="layui-input">
                     </div>
                 </div>
                 <div class="layui-form-item">                
-                    <label class="layui-form-label">图片名称 :</label>
+                    <label class="layui-form-label">图片名称：</label>
                     <div class="layui-input-block">
                         <input type="text" name="imgName" lay-verify="required" autocomplete="off" placeholder="请输入图片名称" lay-verType='tips' class="layui-input">
                     </div>
                 </div>
                 <div class="layui-form-item">                
-                    <label class="layui-form-label">相对文件名称 :</label>
+                    <label class="layui-form-label">相对文件名称：</label>
                     <div class="layui-input-block">
                         <input type="text" name="relativeFileName" lay-verify="required" autocomplete="off" placeholder="请输入相对文件路径" lay-verType='tips' class="layui-input">
                     </div>
                 </div>
                 <div class="layui-form-item">                
-                    <label class="layui-form-label">菜单描述 :</label>
+                    <label class="layui-form-label">菜单描述：</label>
                     <div class="layui-input-block">
                         <textarea name='menuDisc' placeholder="请输入内容" class="layui-textarea"></textarea>
                     </div>
@@ -67,6 +67,7 @@ import FengunionTable from '@/utils/comTable'//表格封装
 export default {
     data(){
         return{
+            title: "添加子菜单",
             info:{},
             viewList:viewList,
             roleTypes:roleTypes,
@@ -77,6 +78,7 @@ export default {
         console.log(this.$route.params);
         if(this.$route.params.data){    
             this.menudata = this.$route.params.data;
+            this.title = "编辑子菜单";
         }
     },
     mounted(){
