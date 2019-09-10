@@ -60,3 +60,9 @@ const ASSIGNPERMISSIONS='/system/allocationOfPermissions'
 export const assignRolePermissions = function(params){
     return https(ASSIGNPERMISSIONS, params, 'post');
 }
+
+// 查询系统名称列表
+const QUERYSYSNAMELIST='/system/querySystemInfoNoPage'
+export const querySysnameList = function(params){
+    return https(QUERYSYSNAMELIST, params, 'post');
+}

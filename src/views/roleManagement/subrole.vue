@@ -6,22 +6,23 @@
                 <div class="layui-form-item">                
                     <label class="layui-form-label">角色名称：</label>
                     <div class="layui-input-block">
-                        <input type="text" name="name" lay-verify="required" autocomplete="off" placeholder="请输入角色名称" lay-verType='tips' class="layui-input inp titleInp" :readonly="isreadonly">
+                        <input type="text" name="rolename" lay-verify="required" autocomplete="off" placeholder="请输入角色名称" lay-verType='tips' class="layui-input inp titleInp" :readonly="isreadonly">
                     </div>
                 </div>
                 <div class="layui-form-item">                
                     <label class="layui-form-label">系统名称：</label>
                     <div class="layui-input-block">
-                        <select name="systemName" lay-verify="required">
-                            <option v-if="!isreadonly" value="" >请选择系统名称</option>
-                            <option v-for="item in sysnameList" :key="item.val" :value="item.val" :disabled="isreadonly">{{ item.label }}</option>
-                        </select>                 
+                        <select v-if="!isreadonly" name="systemname" lay-verify="required">
+                            <option value="">请选择系统名称</option>
+                            <option v-for="item in sysnameList" :key="item.id" :value="item.val">{{ item.label }}</option>
+                        </select>
+                        <input v-if="isreadonly" type="text" name="systemname" autocomplete="off" class="layui-input inp titleInp" :readonly="isreadonly">                
                     </div>
                 </div>                
                 <div class="layui-form-item">                
                     <label class="layui-form-label">备注：</label>
                     <div class="layui-input-block">
-                        <textarea name="note" placeholder="请输入内容" class="layui-textarea" :readonly="isreadonly"></textarea>
+                        <textarea name="remark" placeholder="请输入内容" class="layui-textarea" :readonly="isreadonly"></textarea>
                     </div>
                 </div>
                 <div class="layui-form-item">
@@ -40,13 +41,15 @@
 </template>
 <script>
 import { sysnameList } from "@/filter/groupList"
+import { querySysnameList, addRole, roleEdit } from '@/api/api'
 export default {
     data(){
         return{
             title: "添加角色",
-            sysnameList: sysnameList,
-            roledata: null,  // c初始值
+            sysnameList: null,
+            roledata: {},  // c初始值
             isreadonly: false,   // 详情页只读
+            form:''
         }
     },
     created() {
@@ -59,40 +62,87 @@ export default {
                 this.title = "角色详情";                
             }
         }
+        
     },
     mounted(){
         layui.use(['form'], ()=>{
             var form = layui.form
-            this.initForm(form);            
+            this.form=form                 
+            this.initForm(form);    
+            this.getSystemList();        
+        })      
+    },
+    updated(){
+        layui.use(['form'], ()=>{
+            var form = layui.form;
+            form.render();  
+            console.log(this.roledata); 
+            form.val("formTest", {  // 设置初始值
+                "rolename": this.roledata.rolename
+                , "systemname": this.roledata.systemname
+                , "remark": this.roledata.remark
+            })           
         })
-        
     },
     methods:{
+        // 获取系统列表
+        getSystemList() {   
+            querySysnameList().then(res=>{
+                if(res.code === 0){
+                    this.sysnameList = [];
+                    res.data.forEach(item => {
+                        let obj ={};
+                        obj.val = item.systemname;
+                        obj.label = item.systemname;
+                        obj.id = item.id;
+                        this.sysnameList.push(obj);
+                    })
+                    // console.log(this.sysnameList);
+                    
+                }else{
+                    this.$message.warning(res.msg);
+                }
+            })
+        },
         initForm(form){
-            form.render()
-            this.formSubmit(form);   //绑定提交
-            if(this.roledata){     // 设置初始值
-                this.setVal(form);
-            }
+            form.render();
+            this.formSubmit(form);
+            console.log(this.roledata);
+            form.val("formTest", {
+                "rolename": this.roledata.rolename
+                , "systemname": this.roledata.systemname
+                , "remark": this.roledata.remark
+            })
+                     
+                        
         },
         formSubmit(form){
             //监听提交
             form.on('submit(subrole)', function(data){
-                console.log(data.field)
-                layer.alert('提交成功', {
-                    title: '最终的提交信息'
-                })
-                return false;
+                if(this.roledata){
+                    let params = {
+                        id: this.roledata.id,
+                        rolename: data.rolename,
+                        systemname: data.systemname,
+                        remark: data.remark
+                    }
+                    roleEdit(params).then(res => {
+                        if(res.code === 0){
+                            
+                            this.$message.success('角色编辑成功');
+                            
+                        }else{
+                            this.$message.warning(res.msg);
+                        }
+                    })
+                }
+
+                // layer.alert('提交成功', {
+                //     title: '最终的提交信息'
+                // })
+                // return false;
             });
-        },
-        // 编辑或者查看设置初始值
-        setVal(form){
-            form.val("formTest", {
-                "name": this.roledata.name
-                , "systemName": this.roledata.systemName
-                , "note": this.roledata.note
-            })
-        },
+        },        
         goback(){
             this.$router.back(-1);
         }
