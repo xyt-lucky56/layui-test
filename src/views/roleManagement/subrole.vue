@@ -1,6 +1,6 @@
 <template>
     <div class="subsystem">
-        <h1>添加角色</h1>
+        <h1>{{ title }}</h1>
         <div class="content">
             <form class="layui-form" action="" lay-filter="formTest">
                 <div class="layui-form-item">                
@@ -43,6 +43,7 @@ import { sysnameList } from "@/filter/groupList"
 export default {
     data(){
         return{
+            title: "添加角色",
             sysnameList: sysnameList,
             roledata: null,  // c初始值
             isreadonly: false,   // 详情页只读
@@ -52,8 +53,10 @@ export default {
         if(this.$route.params.data){
             // console.log(this.$route.params);
             this.roledata = this.$route.params.data;
+            this.title = "编辑角色";
             if(this.$route.params.type === 'detail'){
                 this.isreadonly = true;
+                this.title = "角色详情";                
             }
         }
     },

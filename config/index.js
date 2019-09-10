@@ -22,6 +22,7 @@ module.exports = {
       cssSourceMap: true
     },
     // Various Dev Server settings
+    // host: 'wmj.ll.com', // can be overwritten by process.env.HOST
     host: 'lj.ll.com', // can be overwritten by process.env.HOST
     port: 8080, // can be overwritten by process.env.PORT, if port is in use, a free one will be determined
     autoOpenBrowser: false,
