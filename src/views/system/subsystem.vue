@@ -54,32 +54,25 @@
 </template>
 <script>
 import { versionNum } from '@/filter/regular'
+import { querySubsystem } from '@/api/api'
 export default {
     data(){
         return{
             title:'添加子系统',
-            info:{},
             status:false,
             flag:false,
-            systemInfo:{
-                name:'',
-                describe:'',
-                version:'',
-                order:'',
-                startPage:'',
-            },
+            systemInfo:{},
             version:'',
             id:''
         }
     },
     created(){
         if(JSON.stringify(this.$route.params)!='{}'){
-            this.systemInfo=this.$route.params.data
-            console.log(this.systemInfo)
+            this.id=this.$route.params.data.id
+            this.getSystemInfo()
             if(this.$route.params.flag){
                 this.flag=this.$route.params.flag
                 this.title="子系统编辑"
-                // this.systemInfo=this.info
             }else{
                 this.status=true
                 this.title="子系统详情"
@@ -95,6 +88,15 @@ export default {
         })
     },
     methods:{
+        getSystemInfo(){
+            let params={
+                id:this.id
+            }
+            console.log(params)
+            querySubsystem(params).then(res=>{
+                console.log(res)
+            })
+        },
         formSubmit(form){
             //监听提交
             form.on('submit(demo1)', (data)=>{
