@@ -59,3 +59,4 @@ export const queryRolePermissions = function(params){
 const ASSIGNPERMISSIONS='/system/allocationOfPermissions'
 export const assignRolePermissions = function(params){
     return https(ASSIGNPERMISSIONS, params, 'post');
+}
