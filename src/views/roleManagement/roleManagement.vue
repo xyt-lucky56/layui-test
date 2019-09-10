@@ -22,20 +22,15 @@
 <script>
 import FengunionTable from '@/utils/comTable'  //表格封装
 import { filterSysName } from "@/filter/groupList"
+import { QUERYROLELIST, roleDelete } from '@/api/api'
 export default {
     data(){
         return{
             cols:[[
-                {field:'ID', title: '编号', width:150, sort: true},
-                {field:'name', title: '角色名称'},
-                {field:'systemName', title: '系统名称', },
-                // {field:'version', title: '系统版本号'},
-                // {field:'startImgName', title: '启动图片名称'},
-                // {field:'noStartImgName', title: '不启动图片名称'},
-                // {field:'imgPath', title: '图片路径'},
-                // {field:'order', title: '展示顺序'},
-                // {field:'startPage', title: '起始页面'},
-                {field:'note', title: '备注'},
+                {field:'id', title: '编号', width:150, sort: true},
+                {field:'rolename', title: '角色名称'},
+                {field:'systemname', title: '系统名称', },
+                {field:'remark', title: '备注'},
                 {field:'status', title: '操作',toolbar: '#barDemo',width:260,fixed: 'right'},
             ]],
             limit:10,
@@ -43,8 +38,10 @@ export default {
             data:[]
         }
     },
-    mounted(){       
-        FengunionTable('tableRole', '/api/info/myTranferRecord', this.cols, {}, true,this.limit, 'get', filterSysName).then(e => {//表格初始化
+    mounted(){
+        let url = 'api/api-a-bkf-/user-mucon' + QUERYROLELIST;
+        console.log(url)
+        FengunionTable('tableRole', url, this.cols, {}, true,this.limit, 'post').then(e => {//表格初始化
             console.log(e)
         }) 
         layui.use(['table'], () => {

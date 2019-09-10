@@ -22,7 +22,7 @@ export const sysnameList = [
 ]
 
 export const filterSysName = function(){
-    $("[data-field = 'systemName']").children().each(function(){
+    $("[data-field = 'systemname']").children().each(function(){
         var val = $(this).text();
         if(val === 'operational'){                          
             $(this).text("运营平台");
