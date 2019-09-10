@@ -15,7 +15,7 @@
 </template>
 
 <script>
-import { myTranferRecord } from '@/api/api'
+// import { myTranferRecord } from '@/api/api'
 export default {
   props: {
 
