@@ -28,9 +28,15 @@ export default {
         return{
             cols:[[
                 {field:'id', title: 'ID',width:80,sort: true,fixed: 'left'},
-                {field:'systemname', title: '系统名称',width:150,fixed: 'left'},
-                {field:'systemcontent', title: '系统描述'},
-                {field:'versionno', title: '系统版本号'},
+                {field:'systemname', title: '系统名称',width:150,fixed: 'left',templet:function(res){
+                    return filterData(res.systemname)
+                }},
+                {field:'systemcontent', title: '系统描述',templet:function(res){
+                    return filterData(res.systemcontent)
+                }},
+                {field:'versionno', title: '系统版本号',templet:function(res){
+                    return filterData(res.versionno)
+                }},
                 {field:'enabledpicname', title: '启动图片名称',templet:function(res){
                     return filterData(res.enabledpicname)
                 }},
@@ -40,9 +46,15 @@ export default {
                 {field:'picurl', title: '图片路径',templet:function(res){
                     return filterData(res.picurl)
                 }},
-                {field:'sortno', title: '展示顺序'},
-                {field:'initpage', title: '起始页面'},
-                {field:'remark', title: '备注'},
+                {field:'sortno', title: '展示顺序',templet:function(res){
+                    return filterData(res.sortno)
+                }},
+                {field:'initpage', title: '起始页面',templet:function(res){
+                    return filterData(res.initpage)
+                }},
+                {field:'remark', title: '备注',templet:function(res){
+                    return filterData(res.remark)
+                }},
                 {field:'status', title: '操作',toolbar: '#barDemo',width:200,fixed: 'right'},
             ]],
             limit:10,
