@@ -62,9 +62,9 @@ export default {
         }
     },
     mounted(){
-        FengunionTable('test', 'api/api-a-bkf-/user-mucon/system/querySystemInfo', this.cols, {}, true,this.limit).then(e => {//表格初始化
+        FengunionTable('test', 'api/api-a-bkf-/user-mucon/system/querySystemInfo', this.cols, {}, true,this.limit,'post',function(e){
             console.log(e)
-        })    
+        })
         layui.use(['table'], ()=>{
             var table=layui.table
             this.statusChange(table)
@@ -79,22 +79,25 @@ export default {
             table.on('tool(test)', (obj)=>{
                 var data = obj.data//得到所在行所有键值
                     // console.log(data)
-                if(obj.event === 'detail'){
-                    // layer.msg('ID：'+ data.ID + ' 的查看操作');
+                if(obj.event === 'detail'){//查看
                     this.$router.push({name:'subsystem',params:{data}});
                 }else if(obj.event === 'del'){
                     layer.confirm('真的删除行么', function(index){
-                        // console.log(data)
                         let params={
                             id:data.id
                         }
                         delSubsystem(params).then(res=>{
                             console.log(res)
+                            if(res.code==0){
+                                table.reload('test', {
+                                    url: 'api/api-a-bkf-/user-mucon/system/querySystemInfo'
+                                });
+                                layer.close(index);
+                            }
+                            // obj.del();
                         })
-                        // obj.del();
-                        // layer.close(index);
                     });
-                } else if(obj.event === 'edit'){
+                } else if(obj.event === 'edit'){//编辑
                     this.$router.push({name:'subsystem',params:{data,flag:true}});
                 }
             });
