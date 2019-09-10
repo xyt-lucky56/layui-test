@@ -150,6 +150,7 @@ export default {
     } else {
       this.$router.push('/admin/formList')
     }
+    this.save()
   },
   mounted() {
     layui.use(['layer'])
@@ -258,7 +259,28 @@ export default {
       this.$router.push(this.routerList[index - 1].path)
       localStorage.setItem('historyRoute', JSON.stringify(this.routerList))
       localStorage.setItem('currIndex', this.currIndex)
-    }
+    },
+    save() {
+      this.setCookie('accessToken', 'accessToken');
+      this.setCookie('useId', 'useId');
+      this.setCookie('useType', 'useType');
+      this.setCookie('clientType', 'clientType');
+    },
+     // 存 cookie
+    setCookie(c_name, value) {
+      this.setCookieAndTimeOut(c_name, value, 10);
+    },
+    // 获取token
+    setCookieAndTimeOut(c_name, value, days) {
+      var str = c_name + "=" + escape(value);
+      if (days > 0) {
+        var date = new Date();
+        date.setTime(date.getTime() + days * 24 * 60 * 60 * 1000);
+        str += ";Path=/;domain=" + ".ll.com";
+        str += ";expires=" + date.toGMTString();
+      }
+      document.cookie = str;
+    },
   }
 }
 </script>

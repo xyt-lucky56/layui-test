@@ -12,7 +12,7 @@ module.exports = {
     assetsPublicPath: '/',
     proxyTable: {
       '/api/**': {
-        target: 'http://192.168.0.137:9765/',
+        target: 'http://www.ll.com:2500/',
         changeOrigin: true,
         // secure: false,
         pathRewrite: {
@@ -22,7 +22,7 @@ module.exports = {
       cssSourceMap: true
     },
     // Various Dev Server settings
-    host: 'localhost', // can be overwritten by process.env.HOST
+    host: 'lj.ll.com', // can be overwritten by process.env.HOST
     port: 8080, // can be overwritten by process.env.PORT, if port is in use, a free one will be determined
     autoOpenBrowser: false,
     errorOverlay: true,

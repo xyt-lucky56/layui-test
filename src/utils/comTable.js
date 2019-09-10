@@ -22,6 +22,18 @@ export default function (tableId, url, headerData, params, isPage = true, limit 
                 , dataType: "json"
                 , id: tableId
                 , limit: limit
+                , request: {
+                    pageName: 'pageNum',
+                    limitName: 'pageSize'
+                }                
+                , parseData: (res) => {
+                    return {
+                        "code": 0,
+                        "msg": '请求成功', 
+                        "count": res.total,
+                        "data":res.list,
+                    }
+                }
                 , done: function done(res, curr, count) {
                     resolve({ res, curr, count })
                     if((typeof dataformat) === 'function'){
