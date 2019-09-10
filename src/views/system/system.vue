@@ -62,7 +62,7 @@ export default {
         }
     },
     mounted(){
-        FengunionTable('test', 'api/system/querySystemInfo', this.cols, {}, true,this.limit).then(e => {//表格初始化
+        FengunionTable('test', 'api/api-a-bkf-/user-mucon/system/querySystemInfo', this.cols, {}, true,this.limit).then(e => {//表格初始化
             console.log(e)
         })    
         layui.use(['table'], ()=>{
