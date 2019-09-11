@@ -52,7 +52,7 @@ export default {
         // 监听表格操作按钮  (要想按钮触发此事件，需添加lay-event)
         editorBtn(table) {
             table.on('tool(tableRole)', (obj) => {
-                console.log(obj)
+                // console.log(obj)
                 var data = obj.data;
                 if (obj.event === 'detail') {
                     // this.$message.success('恭喜您，打开成功')

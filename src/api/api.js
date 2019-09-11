@@ -71,6 +71,11 @@ export const assignRolePermissions = function(params){
     return https(ASSIGNPERMISSIONS, params, 'post');
 }
 
+// 查询系统名称列表
+const QUERYSYSNAMELIST='/system/querySystemInfoNoPage'
+export const querySysnameList = function(params){
+    return https(QUERYSYSNAMELIST, params, 'post');
+}
 /**---------权限管理--------- */
 //查询所有权限菜单
 const PERMISSIONSMENU='/system/queryPermissionsMeun'
