@@ -204,7 +204,8 @@ export default {
             })
         },
         cancel(){
-            this.$router.back(-1);
+            this.$router.push('/admin/permissions')
+            // this.$router.back(-1);
         }
     }
 }
