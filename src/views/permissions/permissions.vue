@@ -5,16 +5,23 @@
             <div class="content-left left">
                 <div class="layui-form">
                     <select name="systemName" lay-verify="" lay-filter="myselect">
-                        <option v-for="item in sysnameList" :key="item.val" :value="item.val">{{ item.label }}</option>
+                        <option value="">请选择系统名称</option>
+                        <option v-for="item in sysnameList" :key="item.id" :value="item.val">{{ item.label }}</option>
                     </select>                 
                 </div>
                 <div id="classtree" class="demo-tree"></div>
             </div>
             <div class="content-right left">
                 <button class="layui-btn addbtn" @click="addMenu">{{showChildTable? '添加子菜单' : '添加一级菜单'}}</button> 
-                <table class="layui-hide" lay-filter="test1" id="test1">
+                <table v-show="!showChildTable" class="layui-hide" lay-filter="test1" id="test1">
                     <div id="barDemo">
-                        <a v-show="!showChildTable" class="layui-btn layui-btn-xs" lay-event="jump">添加子菜单</a>
+                        <a class="layui-btn layui-btn-xs" lay-event="jump">添加子菜单</a>
+                        <a class="layui-btn layui-btn-xs bgeditor" lay-event="edit">编辑</a>
+                        <a class="layui-btn layui-btn-xs bgwarn" lay-event="del">删除</a>
+                    </div>
+                </table>
+                <table v-show="showChildTable" class="layui-hide" lay-filter="test2" id="test2">
+                    <div id="barDemo2">   
                         <a class="layui-btn layui-btn-xs bgeditor" lay-event="edit">编辑</a>
                         <a class="layui-btn layui-btn-xs bgwarn" lay-event="del">删除</a>
                     </div>
@@ -27,27 +34,14 @@
 import { filterData,isexpands } from '@/filter/groupList'
 import FengunionTable from '@/utils/comTable'//表格封装
 import { sysnameList, filterViewType } from "@/filter/groupList"
-import { permissionsMenu } from "@/api/api"
+import { querySysnameList, queryGroupinfo, permissionsMenu } from "@/api/api"
 export default {
     data() {
         return {
-            sysnameList,
+            sysnameList: [],
             tree: null,
             table: null,
-            treedata: [{               
-                title: '订单管理系统'
-                ,id: 1
-                ,children:[{
-                    title: "订单管理"
-                    ,id: 2
-                },{
-                    title: "订单配送"
-                    ,id: 3
-                },{
-                    title: "订单统计"
-                    ,id: 4
-                }]
-            }],
+            treedata: [],
             cols:[[
                 {field:'id', title: '编号', width:150, sort: true},
                 {field:'groupname', title: '菜单名称'},
@@ -65,37 +59,109 @@ export default {
                 {field:'remark', title: '备注'},
                 {field:'status', title: '操作',toolbar: '#barDemo',width:210,fixed: 'right'},
             ]],
-            limit:10,
+            cols2:[[
+                {field:'id', title: '编号', width:150, sort: true},
+                {field:'groupname', title: '菜单名称'},
+                {field:'groupname', title: '权限类型'},
+                {field:'groupname', title: '相对文件路径'},
+                {field:'groupname', title: '相对文件名称'},
+                {field:'groupname', title: '界面类型'},
+                {field:'remark', title: '菜单说明'},
+                {field:'status', title: '操作',toolbar: '#barDemo2',width:210,fixed: 'right'},
+            ]],
+            limit: 10,
             limits:[5,7,10],
             showChildTable: false,
-            systemname:''
+            systemname:'',
+            isFirst: true,
         }
     },
-    mounted() {
-        layui.use(['tree', 'table', 'form'], () => {
-            layui.form.render();
-            layui.form.on('select(myselect)', (data) => {
-                // console.log(data);
-                this.reloadData(data.value);
-            })
-            var tree = layui.tree;
-            this.showtree(layui.tree);
-            this.tree = tree;  
-            this.editorBtn(layui.table)
-            this.table = layui.table;    
-        });
-        FengunionTable('test1', 'api/api-a-bkf-/user-mucon/system/queryGroupinfo', this.cols, {systemname:this.systemname}, true,this.limit, 'post', function(e){
-            console.log(e)
-        })
+    created() {
+        this.getSystemList();
     },
     methods: {
-        showtree(tree) {
-            tree.render({
+        // 获取系统列表
+        getSystemList() {   
+            querySysnameList().then(res=>{
+                if(res.code === 0){
+                    this.sysnameList = [];
+                    res.data.forEach(item => {
+                        let obj ={};
+                        obj.val = item.systemname;
+                        obj.label = item.systemname;
+                        obj.id = item.id;
+                        this.sysnameList.push(obj);
+                    })
+                    console.log(this.sysnameList);
+                    this.showtree();
+                    
+                }else{
+                    this.$message.warning(res.msg);
+                }
+            })
+        },
+        getTreedata(val) {
+            let params = {
+                name: val
+            }
+            permissionsMenu(params).then(res => {
+                if(res.code === 0){                            
+                    var treedata = [];
+                    var obj1 = {}, list = res.data[0].list;
+                    obj1.id = res.data[0].id;
+                    obj1.title = res.data[0].systemname;
+                    obj1.children = []; 
+                    if(list.length){
+                        for(let a = 0; a < list.length; a++){
+                            let menutwo = list[a];
+                            let obj2 = {};
+                            obj2.id = menutwo.groupId;
+                            obj2.title = menutwo.groupname;
+                            obj1.children.push(obj2);
+                        } 
+                    }
+                    treedata.push(obj1);
+                    console.log(treedata);
+                    this.treedata = treedata;
+                    this.reloadData(val);                         
+                }else{
+                    this.$message.warning(res.msg);
+                }
+            })
+        },
+        showtree() {
+            layui.use(['tree', 'table', 'form'], () => {
+                var tree = layui.tree;
+                this.tree = tree;  
+                this.editorBtn(layui.table)
+                this.table = layui.table;
+                layui.form.render();
+                layui.tree.render({
+                    elem: '#classtree'
+                    ,id: 'classtree'
+                    ,data: this.treedata
+                })
+                layui.form.on('select(myselect)', (data) => {
+                    console.log(data.value);
+                    this.getTreedata(data.value);
+                    
+                })
+                
+            });
+            FengunionTable('test1', 'api/api-a-bkf-/user-mucon/system/queryGroupinfo', this.cols, {}, true,this.limit, 'post', function(e){
+                console.log(e)
+            })
+            
+        },
+        // 下拉选择后重载数据
+        reloadData(val){
+            let params = {
+                systemname: val
+            }
+            this.tree.reload('classtree',{
                 elem: '#classtree'
-                ,id: 'classtree'
                 ,data: this.treedata
                 ,click: (obj) => {
-                    console.log(obj); //得到当前节点元素 
                     this.systemname=obj.data.title
                     $('div.layui-tree-set').each(function() {
                         $(this).removeClass("bgdetail");
@@ -104,44 +170,40 @@ export default {
                         obj.elem.addClass("bgdetail");
                     }
 
-                    // console.log(obj.data); //得到当前点击的节点数据
-                    let params = {systemname: this.systemname}
-                    // console.log(params);
-                    this.table.reload('test1', {
-                        url: 'api/api-a-bkf-/user-mucon/system/queryGroupinfo'
-                        ,where: params //设定异步数据接口的额外参数
-                    });
-
-                    if(obj.data.children){
+                    console.log(obj.data); //得到当前点击的节点数据
+                    let data = obj.data;
+                    if(data.children){
+                        let params = {systemname: this.systemname}
+                        this.table.reload('test1', {
+                            url: '/api/api-a-bkf-/user-mucon/system/queryGroupinfo'
+                            ,where: params //设定异步数据接口的额外参数
+                        });
                         this.showChildTable = false;
                     }else{
                         this.showChildTable = true;
+                        let params = {
+                            groupId: data.id
+                        }
+                        if(this.isFirst){
+                            FengunionTable('test2', 'api/api-a-bkf-/user-mucon/system/queryPowerinfo', this.cols2, params, true,this.limit, 'post', function(e){
+                                console.log(e)
+                            })
+                        }else{
+                            this.isFirst = false;
+                            this.table.reload('test2', {
+                                url: '/api/api-a-bkf-/user-mucon/system/queryPowerinfo'
+                                ,where: params //设定异步数据接口的额外参数
+                            });
+                        } 
                     }
-                }
-            })
-        },
-        // 下拉选择后重载数据
-        reloadData(val){
-            let params = { id: val }
-
-            this.tree.reload('classtree',{
-                elem: '#classtree'
-                ,data: this.treedata
-                ,click: (obj) => {
-                    console.log(obj.data); //得到当前点击的节点数据
-                    let params = {id: obj.data.id}
-                    console.log(params);
-                    this.table.reload('test1', {
-                        url: '/api/permission/permissionList'
-                        ,where: params //设定异步数据接口的额外参数
-                    });
+                    
                 }
             })
             // console.log(this.treedata);
             let param = {id: this.treedata[0].children[0].id }
             console.log(param);
             this.table.reload('test1', {
-                url: '/api/permission/permissionList'
+                url: '/api/api-a-bkf-/user-mucon/system/queryGroupinfo'
                 ,where: params //设定异步数据接口的额外参数
             });
 

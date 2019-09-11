@@ -8,7 +8,8 @@ params：参数
 page 是否开启分页
 callback  回调函数
 */
-export default function (tableId, url, headerData, params, isPage = true, limit = 10, method = "post",callback) {    
+export default function (tableId, url, headerData, params, isPage = true, limit = 10, method = "post",callback) {  
+    console.log(params)  
     layui.use('table', function () {
         let table = layui.table
         table.render({
@@ -20,7 +21,7 @@ export default function (tableId, url, headerData, params, isPage = true, limit 
             , cols: headerData
             , dataType: "json"
             , id: tableId
-            , limit: limit               
+            , limit: limit             
             , done: function(res, curr, count) {
                 callback({ res, curr, count })                                                   
             }
