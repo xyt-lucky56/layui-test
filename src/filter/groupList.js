@@ -41,8 +41,8 @@ export const viewList = [
     { val: "B/S", label: "B/S" },
     { val: "C/S", label: "C/S" },
     { val: "安卓", label: "安卓" },
-    { val: "小程序 ", label: "小程序" },
-    { val: "IOS ", label: "IOS" }
+    { val: "小程序", label: "小程序" },
+    { val: "IOS", label: "IOS" },
 ]
 
 export const filterViewType = function(){

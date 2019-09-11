@@ -6,13 +6,13 @@
                 <div class="layui-form-item">                
                     <label class="layui-form-label">菜单名称：</label>
                     <div class="layui-input-block">
-                        <input type="text" name="powername" lay-verify="required" autocomplete="off" placeholder="请输入菜单名称" lay-verType='tips' class="layui-input">
+                        <input type="text" name="powername" lay-verify="required|powername" autocomplete="off" placeholder="请输入菜单名称" lay-verType='tips' class="layui-input">
                     </div>
                 </div>
                 <div class="layui-form-item">                
                     <label class="layui-form-label">界面类型：</label>
                     <div class="layui-input-block">
-                        <select name="formtype" lay-verify="required">
+                        <select name="formtype" lay-verify="required|formtype">
                             <option value="">请选择界面类型</option>
                             <option v-for="(item,index) in viewList" :key='index' :value="item.val">{{item.label}}</option>
                         </select>
@@ -21,7 +21,7 @@
                 <div class="layui-form-item">                
                     <label class="layui-form-label">权限类型：</label>
                     <div class="layui-input-block">
-                        <select name="powertype" lay-verify="required">
+                        <select name="powertype" lay-verify="required|powertype">
                             <option value="">请选择权限类型</option>
                             <option v-for="(item,index) in roleTypes" :key='index' :value="item.val">{{item.label}}</option>
                         </select>
@@ -30,19 +30,19 @@
                 <div class="layui-form-item">                
                     <label class="layui-form-label">相对文件路径：</label>
                     <div class="layui-input-block">
-                        <input type="text" name="relativepath" lay-verify="required" autocomplete="off" placeholder="请输入相对文件名称" lay-verType='tips' class="layui-input">
+                        <input type="text" name="relativepath" lay-verify="required|relativepath" autocomplete="off" placeholder="请输入相对文件名称" lay-verType='tips' class="layui-input">
                     </div>
                 </div>
                 <div class="layui-form-item">                
                     <label class="layui-form-label">文件名称：</label>
                     <div class="layui-input-block">
-                        <input type="text" name="filename" lay-verify="required" autocomplete="off" placeholder="请输入相对文件路径" lay-verType='tips' class="layui-input">
+                        <input type="text" name="filename" lay-verify="required|filename" autocomplete="off" placeholder="请输入相对文件路径" lay-verType='tips' class="layui-input">
                     </div>
                 </div>
                 <div class="layui-form-item">                
                     <label class="layui-form-label">图片相对路径：</label>
                     <div class="layui-input-block">
-                        <input type="text" name="picrelativepath" lay-verify="required" autocomplete="off" placeholder="请输入相对文件名称" lay-verType='tips' class="layui-input">
+                        <input type="text" name="picrelativepath" lay-verify="required|picrelativepath" autocomplete="off" placeholder="请输入相对文件名称" lay-verType='tips' class="layui-input">
                     </div>
                 </div>
                 <div class="layui-form-item">                
@@ -116,7 +116,7 @@ export default {
         layui.use(['form'], ()=>{
             var form = layui.form
             this.form=form
-            form.render()
+            form.render()           
             this.formSubmit(form)      
             this.checkForm(form)     
         })
@@ -204,8 +204,8 @@ export default {
             })
         },
         cancel(){
-            this.$router.push('/admin/permissions')
-            // this.$router.back(-1);
+            // this.$router.push('/admin/permissions')
+            this.$router.back(-1);
         }
     }
 }

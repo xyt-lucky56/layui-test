@@ -12,7 +12,7 @@
                 <div class="layui-form-item">                
                     <label class="layui-form-label">系统名称 :</label>
                     <div class="layui-input-block">
-                        <select name="systemname" lay-verify="required">
+                        <select name="systemname" lay-verify="required|systemname">
                             <option value="">请选择系统名称</option>
                             <option v-for="(item,index) in systemnameList" :key='index' :value="item.systemname">{{item.systemname}}</option>
                         </select>
@@ -21,7 +21,7 @@
                 <div class="layui-form-item">                
                     <label class="layui-form-label">图片路径 :</label>
                     <div class="layui-input-block">
-                        <input type="text" name="picpath" lay-verify="required" autocomplete="off" placeholder="请输入图片路径" lay-verType='tips' class="layui-input">
+                        <input type="text" name="picpath" lay-verify="required|picpath" autocomplete="off" placeholder="请输入图片路径" lay-verType='tips' class="layui-input">
                     </div>
                 </div>
                 <div class="layui-form-item">                
@@ -33,7 +33,7 @@
                 <div class="layui-form-item">                
                     <label class="layui-form-label">是否展开 :</label>
                     <div class="layui-input-block">
-                        <select name="isexpand" lay-verify="required">
+                        <select name="isexpand" lay-verify="required|isexpand">
                             <option value="">请选择是否展开</option>
                             <option v-for="(items,index) in isexpandList" :key='index' :value="items.val">{{items.lab}}</option>
                             <!-- <option value="true">是</option>
@@ -78,7 +78,7 @@
 </template>
 <script>
 import { queryGroupinfoById,querySysnameList,editGroupinfo,addGroupinfos,deletePowerinfos } from '@/api/api'
-// import { viewList,roleTypes } from '@/filter/groupList'
+import { filterData } from '@/filter/groupList'
 import FengunionTable from '@/utils/comTable'//表格封装
 // import  { setCookie } from '@/utils/cookie'
 export default {
@@ -94,7 +94,9 @@ export default {
                 {field:'powername', title: '菜单名称',width:150},
                 {field:'formtype', title: '界面类型'},
                 {field:'powertype', title: '权限类型'},
-                {field:'picname', title: '图片名称'},
+                {field:'picname', title: '图片名称',templet:function(res){
+                    return filterData(res.picname)
+                }},
                 {field:'relativepath', title: '相对文件路径'},
                 {field:'filename', title: '相对文件名称'},
                 {field:'remark', title: '菜单描述'},
