@@ -35,7 +35,7 @@
                     <div class="layui-inline">
                         <label class="layui-form-label">英文名 :</label>
                         <div class="layui-input-inline">
-                            <input type="text" name="englishname" placeholder="请输入姓名" lay-verify="required|englishname" lay-verType='tips' autocomplete="off" class="layui-input">
+                            <input type="text" name="englishName" placeholder="请输入姓名" lay-verify="required|englishName" lay-verType='tips' autocomplete="off" class="layui-input">
                         </div>
                     </div>
                     <div class="layui-inline">
@@ -49,13 +49,13 @@
                     <div class="layui-inline">
                         <label class="layui-form-label">手机号 :</label>
                         <div class="layui-input-inline">
-                            <input type="tel" name="phone" placeholder="请输入手机号" lay-verify="required|phone" lay-verType='tips' autocomplete="off" class="layui-input">
+                            <input type="tel" name="mobile" placeholder="请输入手机号" lay-verify="required|mobile" lay-verType='tips' autocomplete="off" class="layui-input">
                         </div>
                     </div>
                     <div class="layui-inline">
                         <label class="layui-form-label">邮政编码 :</label>
                         <div class="layui-input-inline">
-                            <input type="text" name="zipcode" placeholder="邮政编码" lay-verify="required|zipcode" lay-verType='tips' autocomplete="off" class="layui-input">
+                            <input type="text" name="postCode" placeholder="邮政编码" lay-verify="required|postCode" lay-verType='tips' autocomplete="off" class="layui-input">
                         </div>
                     </div>
                 </div>
@@ -63,7 +63,7 @@
                     <div class="layui-inline">
                         <label class="layui-form-label">联系电话 :</label>
                         <div class="layui-input-inline">
-                            <input type="tel" name="phoneNumber" placeholder="请输入联系电话" lay-verify="required|phoneNumber" lay-verType='tips' autocomplete="off" class="layui-input">
+                            <input type="tel" name="tel" placeholder="请输入联系电话" lay-verify="required|tel" lay-verType='tips' autocomplete="off" class="layui-input">
                         </div>
                     </div>
                     <div class="layui-inline">
@@ -80,7 +80,7 @@
                     <div class="layui-inline">
                         <label class="layui-form-label">所属部门 :</label>
                         <div class="layui-input-inline">
-                            <select name="department" lay-verify="required">
+                            <select name="deptId" lay-verify="required">
                                 <option value="">请选择所属部门</option>
                                 <option v-for="(item,index) in departments" :key='index' :value="item.title">{{item.title}}</option>
                             </select>
@@ -89,7 +89,7 @@
                     <div class="layui-inline">
                         <label class="layui-form-label">备注 :</label>
                         <div class="layui-input-inline">
-                            <textarea name='textarea' placeholder="请输入内容" class="layui-textarea"></textarea>
+                            <textarea name='remark' placeholder="请输入内容" class="layui-textarea"></textarea>
                         </div>
                     </div>
                 </div>
@@ -141,11 +141,11 @@ export default {
                 'name':this.info.name,
                 'email':this.info.email,
                 'address':this.info.address,
-                'phone':this.info.phone,
-                'zipcode':this.info.zipcode,
-                'phoneNumber':this.info.phoneNumber,
+                'mobile':this.info.mobile,
+                'postCode':this.info.postCode,
+                'tel':this.info.tel,
                 'userType':this.info.userType,
-                'department':this.info.department,
+                'deptId':this.info.deptId,
             })
             this.formSubmit(form)
             this.checkForm(form)
@@ -165,10 +165,10 @@ export default {
             form.verify({
                 qq:[/^[1-9][0-9]{4,9}$/,'QQ号格式不正确'],
                 name:[/^[\u2E80-\u9FFF]+$/,'姓名输入不合法'],
-                englishname:[/^[a-zA-Z]+$/,'英文名输入不合法'],
-                zipcode:[/^[1-9][0-9]{5}$/,'邮政编码不符合规则'],
+                englishName:[/^[a-zA-Z]+$/,'英文名输入不合法'],
+                postCode:[/^[1-9][0-9]{5}$/,'邮政编码不符合规则'],
                 // phoneNumber:[/0\d{2,3}-\d{7,8}/,'联系电话不符合规则'],
-                phoneNumber:[/^((0\d{2,3})-)?(\d{7,8})(-(\d{3,}))?$|(0\d{10})$/,'联系电话不符合规则']
+                tel:[/^((0\d{2,3})-)?(\d{7,8})(-(\d{3,}))?$|(0\d{10})$/,'联系电话不符合规则']
             })
         },
         cancel(){

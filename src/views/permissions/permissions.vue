@@ -27,7 +27,7 @@
 import { filterData,isexpands } from '@/filter/groupList'
 import FengunionTable from '@/utils/comTable'//表格封装
 import { sysnameList, filterViewType } from "@/filter/groupList"
-import { permissionsMenu } from "@/api/api"
+import { permissionsMenu,deleteGroupinfo } from "@/api/api"
 export default {
     data() {
         return {
@@ -152,8 +152,21 @@ export default {
                 // console.log(obj)
                 var data = obj.data;
                 if (obj.event === 'del') {//删除
-                    this.$message.confirm('真的删除行么').then(() => {
-                        obj.del();
+                    layer.confirm('真的删除行么', (index)=>{
+                        let params={
+                            id:data.id,
+                            count:''
+                        }
+                        deleteGroupinfo(params).then(res=>{
+                            if(res.code==0){
+                                this.table.reload('test1', {
+                                    url: 'api/api-a-bkf-/user-mucon/system/queryGroupinfo'
+                                    ,where: {systemname: this.systemname} //设定异步数据接口的额外参数
+                                });
+                                layer.close(index);
+                            }
+                        })
+                        // obj.del();
                     })
                 } else if (obj.event === 'edit') {//编辑
                     if(this.showChildTable){

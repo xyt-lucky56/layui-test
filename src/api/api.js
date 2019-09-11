@@ -122,7 +122,7 @@ export const editGroupinfo = function(params){
 //删除一级菜单
 const DELETEGROUPINFO='/system/deleteGroupinfo'
 export const deleteGroupinfo = function(params){
-    return https(DELETEGROUPINFO, params, 'post');
+    return https(DELETEGROUPINFO, params, 'post','form');
 }
 
 //添加子菜单
@@ -134,7 +134,7 @@ export const addPowerinfo = function(params){
 //查询子菜单详情
 const QUERYPOWERINFOBYID='/system/queryPowerinfoById'
 export const queryPowerinfoById = function(params){
-    return https(QUERYPOWERINFOBYID, params, 'post');
+    return https(QUERYPOWERINFOBYID, params, 'post','form');
 }
 
 //编辑子菜单
@@ -146,5 +146,5 @@ export const editPowerinfos = function(params){
 //删除子菜单
 const DELPOWERINFO='/system/deletePowerinfos'
 export const deletePowerinfos = function(params){
-    return https(DELPOWERINFO, params, 'post');
+    return https(DELPOWERINFO, params, 'post','form');
 }
