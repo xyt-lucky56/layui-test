@@ -6,13 +6,14 @@
                 <div class="layui-form-item">                
                     <label class="layui-form-label">菜单名称：</label>
                     <div class="layui-input-block">
-                        <input type="text" name="menuName" lay-verify="required" autocomplete="off" placeholder="请输入菜单名称" lay-verType='tips' class="layui-input">
+                        <input type="text" name="powername" lay-verify="required" autocomplete="off" placeholder="请输入菜单名称" lay-verType='tips' class="layui-input">
                     </div>
                 </div>
                 <div class="layui-form-item">                
                     <label class="layui-form-label">界面类型：</label>
                     <div class="layui-input-block">
-                        <select name="viewType" lay-verify="required" v-model="info.InterfaceType">
+                        <select name="formtype" lay-verify="required">
+                            <option value="">请选择界面类型</option>
                             <option v-for="(item,index) in viewList" :key='index' :value="item.val">{{item.label}}</option>
                         </select>
                     </div>
@@ -20,7 +21,8 @@
                 <div class="layui-form-item">                
                     <label class="layui-form-label">权限类型：</label>
                     <div class="layui-input-block">
-                        <select name="powerType" lay-verify="required" v-model="info.roleType">
+                        <select name="powertype" lay-verify="required">
+                            <option value="">请选择权限类型</option>
                             <option v-for="(item,index) in roleTypes" :key='index' :value="item.val">{{item.label}}</option>
                         </select>
                     </div>
@@ -28,27 +30,43 @@
                 <div class="layui-form-item">                
                     <label class="layui-form-label">相对文件路径：</label>
                     <div class="layui-input-block">
-                        <input type="text" name="relativePath" lay-verify="required" autocomplete="off" placeholder="请输入相对文件名称" lay-verType='tips' class="layui-input">
+                        <input type="text" name="relativepath" lay-verify="required" autocomplete="off" placeholder="请输入相对文件名称" lay-verType='tips' class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-form-item">                
+                    <label class="layui-form-label">文件名称：</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="filename" lay-verify="required" autocomplete="off" placeholder="请输入相对文件路径" lay-verType='tips' class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-form-item">                
+                    <label class="layui-form-label">图片相对路径：</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="picrelativepath" lay-verify="required" autocomplete="off" placeholder="请输入相对文件名称" lay-verType='tips' class="layui-input">
                     </div>
                 </div>
                 <div class="layui-form-item">                
                     <label class="layui-form-label">图片名称：</label>
                     <div class="layui-input-block">
-                        <input type="text" name="imgName" lay-verify="required" autocomplete="off" placeholder="请输入图片名称" lay-verType='tips' class="layui-input">
-                    </div>
-                </div>
-                <div class="layui-form-item">                
-                    <label class="layui-form-label">相对文件名称：</label>
-                    <div class="layui-input-block">
-                        <input type="text" name="relativeFileName" lay-verify="required" autocomplete="off" placeholder="请输入相对文件路径" lay-verType='tips' class="layui-input">
+                        <input type="text" name="picname" lay-verify="required|picname" autocomplete="off" placeholder="请输入图片名称" lay-verType='tips' class="layui-input">
                     </div>
                 </div>
                 <div class="layui-form-item">                
                     <label class="layui-form-label">菜单描述：</label>
                     <div class="layui-input-block">
-                        <textarea name='menuDisc' placeholder="请输入内容" class="layui-textarea"></textarea>
+                        <textarea name='remark' placeholder="请输入内容" class="layui-textarea"></textarea>
                     </div>
-                </div>                
+                </div>    
+                <div class="layui-form-item" v-if="status">                
+                    <label class="layui-form-label">是否停用：</label>
+                    <div class="layui-input-block">
+                        <select name="stopsign" lay-verify="required">
+                            <option value="">请选择是否停用</option>
+                            <option value="true">停用</option>
+                            <option value="false">不停用</option>
+                        </select>
+                    </div>
+                </div>            
                 <div class="layui-form-item">
                     <div class="layui-input-block submit">
                         <div>
@@ -62,6 +80,7 @@
     </div>
 </template>
 <script>
+import { queryPowerinfoById,addPowerinfo,editPowerinfos } from '@/api/api'
 import { viewList,roleTypes } from '@/filter/groupList'
 import FengunionTable from '@/utils/comTable'//表格封装
 export default {
@@ -71,36 +90,117 @@ export default {
             info:{},
             viewList:viewList,
             roleTypes:roleTypes,
-            menudata: null,    
+            menudata: {},  
+            status:false,
+            id:'',
+            groupId:'',
+            addflag:false,
+            form:''
         }
     },
     created() {
+        // console.log(this.viewList);
         console.log(this.$route.params);
-        if(this.$route.params.data){    
-            this.menudata = this.$route.params.data;
+        if(!this.$route.params.addflag){       
+            this.id = this.$route.params.data.id;
             this.title = "编辑子菜单";
-        }
+            this.status=true
+            this.getSubmenuChildInfo()
+        }else{
+            this.addflag=this.$route.params.addflag
+            this.groupId=this.$route.params.data.id
+            // console.log(this.groupId)
+        }       
     },
     mounted(){
         layui.use(['form'], ()=>{
             var form = layui.form
+            this.form=form
             form.render()
-            if(this.menudata){     // 设置初始值
-                this.setVal(form);
-            }
+            this.formSubmit(form)      
+            this.checkForm(form)     
         })
     },
-    methods:{
-        // 编辑或者查看设置初始值
-        setVal(form){
-            form.val("formMenuChild", {
-                "menuName": this.menudata.menuName
-                ,"powerType": this.menudata.powerType
-                ,"relativePath": this.menudata.relativePath
-                ,"imgName": this.menudata.imgName
-                ,"relativeFileName": this.menudata.relativeFileName
-                ,"viewType": this.menudata.viewType
-                ,"menuDisc": this.menudata.menuDisc
+    methods:{  
+        getSubmenuChildInfo(){//获取菜单详情
+            let params={
+                id:this.id
+            }
+            queryPowerinfoById(params).then(res=>{
+                if(res.code==0){
+                    this.menudata=res.data
+                    setTimeout(()=>{
+                        this.form.render()
+                        this.form.val('formMenuChild', {
+                            "powername": this.menudata.powername
+                            ,"formtype": this.menudata.formtype
+                            ,"powertype": this.menudata.powertype
+                            ,"relativepath": this.menudata.relativepath
+                            ,"filename": this.menudata.filename
+                            ,"picrelativepath": this.menudata.picrelativepath
+                            ,"picname": this.menudata.picname
+                            ,"remark": this.menudata.remark
+                            ,"stopsign": JSON.stringify(this.menudata.stopsign)
+                        })
+                    },100) 
+                }else{
+                    this.$message.error(res.msg);
+                }
+            })
+        },
+        formSubmit(form){
+            form.on('submit(demo1)', (data)=>{
+                // console.log(data.field)
+                let params={                    
+                    powername:data.field.powername,
+                    powercontent:data.field.powercontent,
+                    powertype:data.field.powertype,
+                    paramstr:data.field.paramstr,
+                    relativepath:data.field.relativepath,
+                    filename:data.field.filename,
+                    picrelativepath:data.field.picrelativepath,
+                    picname:data.field.picname,
+                    formtype:data.field.formtype,
+                    remark:data.field.remark,                    
+                }
+                if(this.addflag){
+                    let obj={
+                        groupId:this.groupId,
+                        stopsign:false,
+                    }
+                    params=Object.assign(params,obj)
+                    addPowerinfo(params).then(res=>{
+                        if(res.code==0){
+                            this.$message.success('提交成功')
+                            this.$router.push('/admin/permissions')
+                            return false
+                        }else{
+                            this.$message.error(res.msg);
+                        }
+                    })
+                }else{
+                    let obj1={
+                        id:this.id,
+                        stopsign:data.field.stopsign,
+                    }
+                    params=Object.assign(params,obj1)
+                    editPowerinfos(params).then(res=>{
+                        if(res.code==0){
+                            this.$message.success('修改成功')
+                            this.$router.back(-1);
+                            // this.$router.push('/admin/permissions')
+                            return false
+                        }else{
+                            this.$message.error(res.msg);
+                        }
+                    })
+                }
+            })
+        },
+        checkForm(form){
+            form.verify({                
+                // menuName:[/^[\u2E80-\u9FFF]+$/,'菜单名称不合法'],
+                picname:[/[^\s]+\.(jpg|jpeg|gif|png|bmp)/i,'图片名称不合法'],
             })
         },
         cancel(){

@@ -93,6 +93,9 @@ export default {
                                     url: 'api/api-a-bkf-/user-mucon/system/querySystemInfo'
                                 });
                                 layer.close(index);
+                            }else{
+                                layer.close(index);
+                                this.$message.error(res.msg);
                             }
                             // obj.del();
                         })

@@ -34,7 +34,7 @@
 import { filterData,isexpands } from '@/filter/groupList'
 import FengunionTable from '@/utils/comTable'//表格封装
 import { sysnameList, filterViewType } from "@/filter/groupList"
-import { querySysnameList, queryGroupinfo, permissionsMenu } from "@/api/api"
+import { querySysnameList, queryGroupinfo, permissionsMenu, deleteGroupinfo } from "@/api/api"
 export default {
     data() {
         return {
@@ -214,8 +214,25 @@ export default {
                 // console.log(obj)
                 var data = obj.data;
                 if (obj.event === 'del') {//删除
-                    this.$message.confirm('真的删除行么').then(() => {
-                        obj.del();
+                    layer.confirm('真的删除行么', (index)=>{
+                        let params={
+                            id:data.id,
+                            count:1
+                        }
+                        deleteGroupinfo(params).then(res=>{
+                            if(res.code==0){
+                                this.$message.success('删除成功')
+                                this.table.reload('test1', {
+                                    url: 'api/api-a-bkf-/user-mucon/system/queryGroupinfo'
+                                    ,where: {systemname: this.systemname} //设定异步数据接口的额外参数
+                                });
+                                layer.close(index);
+                            }else{
+                                layer.close(index);
+                                this.$message.error(res.msg);
+                            }
+                        })
+                        // obj.del();
                     })
                 } else if (obj.event === 'edit') {//编辑
                     if(this.showChildTable){
@@ -225,7 +242,7 @@ export default {
                     }
                     
                 } else if(obj.event === 'jump') {
-                    this.$router.push({ name: 'subMenuChild' })
+                    this.$router.push({ name: 'subMenuChild',params:{data,addflag:true} })
                 }
             });
         },

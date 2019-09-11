@@ -140,6 +140,15 @@ export default {
       return this.$store.state.addNumber.name
     }
   },
+  watch:{
+    $route: {
+      handler: function (val, oldVal) {
+        if(val.name=='permissions'){
+          sessionStorage.removeItem('subMenuId')
+        }
+      }
+    }
+  },
   created() {
     let historyRoute = localStorage.getItem('historyRoute')
     let dataIndex = localStorage.getItem('currIndex')

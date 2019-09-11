@@ -14,19 +14,10 @@
                     <div class="layui-input-block">
                         <select name="systemname" lay-verify="required">
                             <option value="">请选择系统名称</option>
-                            <option v-for="(item,index) in systemnameList" :key='index' :value="item.val">{{item.label}}</option>
+                            <option v-for="(item,index) in systemnameList" :key='index' :value="item.systemname">{{item.systemname}}</option>
                         </select>
                     </div>
-                </div>
-                <!-- <div class="layui-form-item">                
-                    <label class="layui-form-label">权限类型 :</label>
-                    <div class="layui-input-block">
-                        <select name="powerType" lay-verify="required">
-                            <option value="">请选择权限类型</option>
-                            <option v-for="(item,index) in roleTypes" :key='index' :value="item.val">{{item.label}}</option>
-                        </select>
-                    </div>
-                </div> -->
+                </div>                
                 <div class="layui-form-item">                
                     <label class="layui-form-label">图片路径 :</label>
                     <div class="layui-input-block">
@@ -42,9 +33,11 @@
                 <div class="layui-form-item">                
                     <label class="layui-form-label">是否展开 :</label>
                     <div class="layui-input-block">
-                        <select name="systemname" lay-verify="required">
-                             <option value="false">否</option>
-                             <option value="true">是</option>
+                        <select name="isexpand" lay-verify="required">
+                            <option value="">请选择是否展开</option>
+                            <option v-for="(items,index) in isexpandList" :key='index' :value="items.val">{{items.lab}}</option>
+                            <!-- <option value="true">是</option>
+                            <option value="false">否</option> -->
                         </select>
                     </div>
                 </div>
@@ -69,8 +62,8 @@
                     </div>
                 </div>  
             </form>
-            <fieldset class="layui-elem-field layui-field-title" v-if='status'>
-                <legend>子菜单列表</legend>
+            <fieldset class="layui-elem-field layui-field-title" v-if="status">
+                <legend v-show="status">子菜单列表</legend>
                 <div class="layui-field-box">  
                     <table class="layui-hide" lay-filter="menuOneTest" id="menuOneTest">
                         <div id="barDemo">
@@ -84,67 +77,102 @@
     </div>
 </template>
 <script>
-import { queryGroupinfoById,querySystemInfoNoPage } from '@/api/api'
-import { viewList,roleTypes } from '@/filter/groupList'
+import { queryGroupinfoById,querySystemInfoNoPage,editGroupinfo,addGroupinfos,deletePowerinfos } from '@/api/api'
+// import { viewList,roleTypes } from '@/filter/groupList'
 import FengunionTable from '@/utils/comTable'//表格封装
+// import  { setCookie } from '@/utils/cookie'
 export default {
     data(){
         return{
             title:'添加一级菜单',
-            info:{},
-            viewList:viewList,
-            roleTypes:roleTypes,
-            systemnameList:[],
+            info:{},            
+            systemnameList:[],//系统名称
+            subSystemOneList:[],//子菜单列表
             status:false,
             cols:[[
                 {field:'id', title: 'ID',width:80,sort: true},
                 {field:'powername', title: '菜单名称',width:150},
-                {field:'viewType', title: '界面类型'},
-                {field:'powerType', title: '权限类型'},
-                {field:'imgName', title: '图片名称'},
-                {field:'relativePath', title: '相对文件路径'},
-                {field:'relativeFileName', title: '相对文件名称'},
-                {field:'menuDisc', title: '菜单描述'},
+                {field:'formtype', title: '界面类型'},
+                {field:'powertype', title: '权限类型'},
+                {field:'picname', title: '图片名称'},
+                {field:'relativepath', title: '相对文件路径'},
+                {field:'filename', title: '相对文件名称'},
+                {field:'remark', title: '菜单描述'},
                 {field:'status', title: '操作',toolbar: '#barDemo',width:200,fixed: 'right'},
             ]],
-            limit:5,
+            isexpandList:[{val:false,lab:'否'},{val:true,lab:'是'}],
             id:'',
-            form:''
+            form:'',
+            tableIns:''
         }
     },
     created(){
+        this.getSystem()
         if(JSON.stringify(this.$route.params)!='{}'){
             this.id=this.$route.params.data.id
+            sessionStorage.setItem('subMenuId',this.id)
+            this.title='菜单编辑'     
+            this.status=true 
+            this.getSubmenuInfo()
+        }else if(sessionStorage.getItem('subMenuId')){
+            // console.log(sessionStorage.getItem('subMenuId'))
+            this.id=sessionStorage.getItem('subMenuId')
+            this.title='菜单编辑'
             this.status=true   
-            this.title='菜单编辑'         
-        }
+            this.getSubmenuInfo()
+        }         
     },
-    mounted(){
-        // if(this.status){
-        //     FengunionTable('menuOneTest', '/api/permission/subMentuOne', this.cols, {}, true,this.limit).then(e => {//表格初始化
-        //         // console.log(e)
-        //     }) 
-        // }
+    mounted(){            
         layui.use(['form','table'], ()=>{
             var form = layui.form,
             table=layui.table
             this.form=form
-            this.getSubmenuInfo()
-            form.render()            
+            form.render()
+            this.tableIns = table.render({
+                elem: '#menuOneTest',
+                cols:this.cols,
+                data:this.subSystemOneList,
+                page:true,
+                done:function(res, curr, count){
+                    // console.log(res)
+                }
+            })           
             this.formSubmit(form)
             this.statusChange(table)
-            this.checkForm(form)
+            this.checkForm(form)            
+        })
+        // if(this.status){
+        //     FengunionTable('menuOneTest', 'api/api-a-bkf-/user-mucon/system/queryPowerinfo', this.cols, {id:this.id}, true,this.limit,'post',function(e){
+        //         console.log(e)
+        //     })
+        // }
+    },   
+    updated(){          
+        layui.use(['form'], ()=>{
+            layui.form.render()
         })
     },
     methods:{
-        getSubmenuInfo(){
+        getSystem(){//获取系统名称
+            querySystemInfoNoPage().then(res=>{
+                // console.log(res)
+                if(res.code==0){
+                    this.systemnameList=res.data
+                }
+            })
+        },
+        getSubmenuInfo(){//获取详情
             let params={
                 id:this.id
             }
             queryGroupinfoById(params).then(res=>{
                 console.log(res)
                 if(res.code==0){
-                    this.info=res.data.sysGroupinfo
+                    this.info=res.data
+                    this.subSystemOneList=res.totalData
+                    this.tableIns.reload({
+                        data:this.subSystemOneList
+                    })
                     setTimeout(()=>{
                         this.form.render()
                         this.form.val('example', {
@@ -152,21 +180,54 @@ export default {
                             'systemname':this.info.systemname,
                             'picpath':this.info.picpath,
                             'picname':this.info.picname,
-                            'isexpand':this.info.isexpand,
+                            'isexpand':JSON.stringify(this.info.isexpand),
                             'sortno':this.info.sortno,
                             'remark':this.info.remark,
                         })
-                    })
+                    },100)            
+                }else{
+                    this.$message.error(res.msg);
                 }
             })
         },
         formSubmit(form){
             //监听提交
             form.on('submit(demo1)', (data)=>{
-                console.log(data.field)
-                this.$message.success('提交成功')
-                // this.$router.push('/permissions')
-                return false
+                // console.log(data.field)
+                let params={
+                    groupname:data.field.groupname,
+                    systemname:data.field.systemname,
+                    picpath:data.field.picpath,
+                    picname:data.field.picname,
+                    isexpand:data.field.isexpand,
+                    sortno:data.field.sortno,
+                    remark:data.field.remark,
+                }
+                if(this.id){
+                    let obj={
+                        id:this.id
+                    }
+                    params=Object.assign(params,obj)
+                    editGroupinfo(params).then(res=>{
+                        if(res.code==0){
+                            this.$message.success('修改成功')
+                            this.$router.push('/admin/permissions')
+                            return false
+                        }else{
+                            this.$message.error(res.msg);
+                        }
+                    })
+                }else{                    
+                    addGroupinfos(params).then(res=>{
+                        if(res.code==0){
+                            this.$message.success('提交成功')
+                            this.$router.push('/admin/permissions')
+                            return false
+                        }else{
+                            this.$message.error(res.msg);
+                        }
+                    })
+                }
             });
         },
         checkForm(form){
@@ -178,13 +239,39 @@ export default {
         statusChange(table){
             table.on('tool(menuOneTest)', (obj)=>{
                 var data = obj.data//得到所在行所有键值
-                    console.log(data)
+                    // console.log(data)
                 if(obj.event === 'edit'){//编辑
                     this.$router.push({name:'subMenuChild',params:{data}});
                 }else if(obj.event === 'del'){
-                    layer.confirm('真的删除行么', function(index){
-                        obj.del();
-                        layer.close(index);
+                    layer.confirm('真的删除行么', (index)=>{
+                        let params={
+                            id:data.id
+                        }
+                        deletePowerinfos(params).then(res=>{
+                            if(res.code==0){
+                                this.$message.success('删除成功')
+                                // table.reload('menuOneTest', {
+                                //     where:{id:this.id},
+                                //     url: 'api/api-a-bkf-/user-mucon/system/queryPowerinfo'
+                                // });
+                                // layer.close(index);
+                                let stem={
+                                    id:this.id
+                                }
+                                queryGroupinfoById(stem).then(res=>{
+                                    if(res.code==0){                                        
+                                        this.subSystemOneList=res.totalData                                       
+                                        this.tableIns.reload({
+                                            data:this.subSystemOneList
+                                        })
+                                        layer.close(index);
+                                    }
+                                })
+                            }else{
+                                layer.close(index);
+                                this.$message.error(res.msg);
+                            }
+                        })                        
                     });
                 }
             });
