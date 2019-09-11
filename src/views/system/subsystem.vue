@@ -101,6 +101,8 @@ export default {
                         'sortno':this.systemInfo.sortno,                
                         'initpage':this.systemInfo.initpage,                
                     })
+                }else{
+                    this.$message.error(res.msg);
                 }
             })
         },
@@ -128,6 +130,8 @@ export default {
                             this.$message.success('编辑成功')
                             this.$router.push('/admin/system')
                             return false
+                        }else{
+                            this.$message.error(res.msg);
                         }
                     })               
                 }else{                    
@@ -137,6 +141,8 @@ export default {
                             this.$message.success('提交成功')
                             this.$router.push('/admin/system')
                             return false
+                        }else{
+                            this.$message.error(res.msg);
                         }
                     })
                 }

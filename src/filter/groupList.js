@@ -38,25 +38,25 @@ export const filterSysName = function(){
 
 // 界面类型
 export const viewList = [
-    { val: "bs", label: "B/S" },
-    { val: "cs", label: "C/S" },
-    { val: "andirod", label: "安卓" },
-    { val: "wx ", label: "小程序" },
-    { val: "ios ", label: "IOS" }
+    { val: "B/S", label: "B/S" },
+    { val: "C/S", label: "C/S" },
+    { val: "安卓", label: "安卓" },
+    { val: "小程序 ", label: "小程序" },
+    { val: "IOS ", label: "IOS" }
 ]
 
 export const filterViewType = function(){
     $("[data-field = 'viewType']").children().each(function(){
         var val = $(this).text();
-        if(val === 'bs'){                          
+        if(val === 'B/S'){                          
             $(this).text("B/S");
-        }else if(val === 'cs'){            
+        }else if(val === 'C/S'){            
             $(this).text("C/S");
-        }else if(val === 'andirod'){            
+        }else if(val === '安卓'){            
             $(this).text("安卓");
-        }else if(val === 'wx'){
+        }else if(val === '小程序'){
             $(this).text("小程序");            
-        }else if(val === 'ios'){
+        }else if(val === 'IOS'){
             $(this).text("IOS");           
         }       
     })

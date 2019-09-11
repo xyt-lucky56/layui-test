@@ -35,7 +35,7 @@
                     <div class="layui-input-block">
                         <select name="isexpand" lay-verify="required">
                             <option value="">请选择是否展开</option>
-                            <option v-for="(items,index) in isexpands" :key='index' :value="items.val">{{items.lab}}</option>
+                            <option v-for="(items,index) in isexpandList" :key='index' :value="items.val">{{items.lab}}</option>
                             <!-- <option value="true">是</option>
                             <option value="false">否</option> -->
                         </select>
@@ -62,8 +62,8 @@
                     </div>
                 </div>  
             </form>
-            <fieldset class="layui-elem-field layui-field-title">
-                <legend>子菜单列表</legend>
+            <fieldset class="layui-elem-field layui-field-title" v-if="status">
+                <legend v-show="status">子菜单列表</legend>
                 <div class="layui-field-box">  
                     <table class="layui-hide" lay-filter="menuOneTest" id="menuOneTest">
                         <div id="barDemo">
@@ -80,6 +80,7 @@
 import { queryGroupinfoById,querySystemInfoNoPage,editGroupinfo,addGroupinfos,deletePowerinfos } from '@/api/api'
 // import { viewList,roleTypes } from '@/filter/groupList'
 import FengunionTable from '@/utils/comTable'//表格封装
+// import  { setCookie } from '@/utils/cookie'
 export default {
     data(){
         return{
@@ -99,7 +100,7 @@ export default {
                 {field:'remark', title: '菜单描述'},
                 {field:'status', title: '操作',toolbar: '#barDemo',width:200,fixed: 'right'},
             ]],
-            isexpands:[{val:false,lab:'否'},{val:true,lab:'是'}],
+            isexpandList:[{val:false,lab:'否'},{val:true,lab:'是'}],
             id:'',
             form:'',
             tableIns:''
@@ -109,12 +110,19 @@ export default {
         this.getSystem()
         if(JSON.stringify(this.$route.params)!='{}'){
             this.id=this.$route.params.data.id
+            sessionStorage.setItem('subMenuId',this.id)
             this.title='菜单编辑'     
             this.status=true 
             this.getSubmenuInfo()
-        }
+        }else if(sessionStorage.getItem('subMenuId')){
+            // console.log(sessionStorage.getItem('subMenuId'))
+            this.id=sessionStorage.getItem('subMenuId')
+            this.title='菜单编辑'
+            this.status=true   
+            this.getSubmenuInfo()
+        }         
     },
-    mounted(){        
+    mounted(){            
         layui.use(['form','table'], ()=>{
             var form = layui.form,
             table=layui.table
@@ -126,8 +134,9 @@ export default {
                 data:this.subSystemOneList,
                 page:true,
                 done:function(res, curr, count){
+                    // console.log(res)
                 }
-            })
+            })           
             this.formSubmit(form)
             this.statusChange(table)
             this.checkForm(form)            
@@ -138,7 +147,7 @@ export default {
         //     })
         // }
     },   
-    updated(){
+    updated(){          
         layui.use(['form'], ()=>{
             layui.form.render()
         })
@@ -157,10 +166,10 @@ export default {
                 id:this.id
             }
             queryGroupinfoById(params).then(res=>{
-                // console.log(res)
+                console.log(res)
                 if(res.code==0){
-                    this.info=res.data.sysGroupinfo
-                    this.subSystemOneList=res.data.sysPowerinfo
+                    this.info=res.data
+                    this.subSystemOneList=res.totalData
                     this.tableIns.reload({
                         data:this.subSystemOneList
                     })
@@ -171,11 +180,13 @@ export default {
                             'systemname':this.info.systemname,
                             'picpath':this.info.picpath,
                             'picname':this.info.picname,
-                            'isexpand':this.info.isexpand,
+                            'isexpand':JSON.stringify(this.info.isexpand),
                             'sortno':this.info.sortno,
                             'remark':this.info.remark,
                         })
                     },100)            
+                }else{
+                    this.$message.error(res.msg);
                 }
             })
         },
@@ -202,6 +213,8 @@ export default {
                             this.$message.success('修改成功')
                             this.$router.push('/admin/permissions')
                             return false
+                        }else{
+                            this.$message.error(res.msg);
                         }
                     })
                 }else{                    
@@ -210,6 +223,8 @@ export default {
                             this.$message.success('提交成功')
                             this.$router.push('/admin/permissions')
                             return false
+                        }else{
+                            this.$message.error(res.msg);
                         }
                     })
                 }
@@ -234,18 +249,27 @@ export default {
                         }
                         deletePowerinfos(params).then(res=>{
                             if(res.code==0){
+                                this.$message.success('删除成功')
+                                // table.reload('menuOneTest', {
+                                //     where:{id:this.id},
+                                //     url: 'api/api-a-bkf-/user-mucon/system/queryPowerinfo'
+                                // });
+                                // layer.close(index);
                                 let stem={
                                     id:this.id
                                 }
                                 queryGroupinfoById(stem).then(res=>{
                                     if(res.code==0){                                        
-                                        this.subSystemOneList=res.data.sysPowerinfo                                       
+                                        this.subSystemOneList=res.totalData                                       
                                         this.tableIns.reload({
                                             data:this.subSystemOneList
                                         })
                                         layer.close(index);
                                     }
                                 })
+                            }else{
+                                layer.close(index);
+                                this.$message.error(res.msg);
                             }
                         })                        
                     });

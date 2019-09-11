@@ -108,7 +108,8 @@ export const addGroupinfos = function(params){
 }
 
 //查询一级菜单详情
-const QUERYGROUPINFOBYID='/system/queryGroupinfoById'
+// const QUERYGROUPINFOBYID='/system/queryGroupinfoById'
+const QUERYGROUPINFOBYID='/system/queryGroupinfoByIdNoPage'
 export const queryGroupinfoById = function(params){
     return https(QUERYGROUPINFOBYID, params, 'post','form');
 }
