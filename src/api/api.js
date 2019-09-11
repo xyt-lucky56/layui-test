@@ -38,7 +38,7 @@ export const queryRoleList = function(params){
 // 删除角色
 const ROLEDELETE='/system/deleteRoleInfoById'
 export const roleDelete = function(params){
-    return https(ROLEDELETE, params, 'post');
+    return https(ROLEDELETE, params, 'post', 'form');
 }
 
 // 添加角色
