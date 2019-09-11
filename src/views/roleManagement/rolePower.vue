@@ -12,94 +12,120 @@
 </template>
 
 <script>
+import { queryRolePermissions, assignRolePermissions } from '@/api/api'
 export default {
   props: {
   },
   data() {
     return {
-      formData: [{
-        title: '用户管理'
-        , id: 1
-        , children: [{
-          title: '添加用户'
-          , id: 3
-        }, {
-          title: '批量删除'
-          , id: 4
-        }, {
-          title: '角色分配'
-          , id: 5
-        },{title: '用户编辑'
-          , id: 6
-        },{title: '用户详情'
-          , id: 7
-        },{title: '用户删除'
-          , id: 8
-        }]
-      }, {
-        title: '角色管理'
-        , id: 2
-        , children: [{
-          title: '添加角色'
-          , id: 9
-        }, {
-          title: '批量删除'
-          , id: 10
-        }, {
-          title: '权限分配'
-          , id: 11
-        }, {
-          title: '角色编辑'
-          , id: 12
-        }]
-      }],
+      id: '',
+      formData: [],
+      roleList: [],
       tree: null,
     };
   },
   created() {
-  },
-  mounted() {
-    layui.use(['tree', 'util'], () => {
-      this.showTree(layui.tree) //渲染树形组件
-      this.tree = layui.tree;
-      this.getTreeList(layui.tree, layui.util) //获取已选中的节点
-    });
+    if(this.$route.params.id){
+      this.id = this.$route.params.id;
+      this.getPowers();
+    }
   },
   methods: {
+    // 获取权限
+    getPowers(){
+      let parmas = {
+        id: this.id
+      }
+      queryRolePermissions(parmas).then(res => {
+        if(res.code === 0){                            
+          var list = res.data.list;
+          var treeData = [];
+          for(let i = 0; i < list.length; i++){
+            let menuone = list[i];
+            let obj1 = {};
+            obj1.id = menuone.groupId;
+            obj1.title = menuone.groupname;
+            obj1.children = []; 
+            if(menuone.sysPowerinfo.length){
+              for(let a = 0; a < menuone.sysPowerinfo.length; a++){
+                let menutwo = menuone.sysPowerinfo[a];
+                let obj2 = {};
+                obj2.id = menutwo.powerId;
+                obj2.title = menutwo.powername;
+                obj1.children.push(obj2);
+              } 
+            }
+            treeData.push(obj1);
+          }
+          this.formData = treeData;
+
+          if(res.data.roleList.length){
+            var list1 = res.data.roleList, roleList=[];
+            for(let i = 0; i < list1.length; i++){
+              let menuone = list1[i];
+              if(menuone.sysPowerinfo.length){
+                for(let a = 0; a < menuone.sysPowerinfo.length; a++){
+                  let menutwo = menuone.sysPowerinfo[a];
+                  roleList.push(menutwo.powerId)
+                } 
+              }
+            }
+            console.log(roleList);
+            this.roleList = roleList;
+          }
+          
+          this.showTree();
+        }else{
+          this.$message.warning(res.msg);
+        }
+      })
+    },
+
     // //渲染树形组件
     showTree(tree) {
-      tree.render({
-        elem: '#test1',   //绑定元素
-        id: 'demoId1',
-        data: this.formData,
-        showCheckbox: true,
-        // click: (obj) => {  //获取当前选中的节点
-        //   // console.log('已选中的节点', obj)
-        // },
-        // oncheck: (obj) => {
-        //   // console.log('我当前的选中', obj)
-        // }
+      layui.use('tree', () => {
+        var tree = layui.tree;
+        this.tree = layui.tree;
+        tree.render({
+          elem: '#test1',   //绑定元素
+          id: 'demoId1',
+          data: this.formData,
+          showCheckbox: true,
+        });
+
+        tree.setChecked('demoId1', this.roleList); 
       });
+      
     },
-    getTreeList(tree, util) {
-      let self= this
-      util.event('lay-demo', {
-        getChecked: function (othis) { //获取选中节点的数据
-          var checkedData = tree.getChecked('demoId1');
-          console.log(checkedData)
-        },
-        // setChecked: function () { //勾选指定节点
-        //   tree.setChecked('demoId1', [12, 16]);
-        // },
-        reload: function () {   //重载实例
-          tree.reload('demoId1', {
-          });
-        }
-      });
-    },
+    
     subPower() {
-        var checkData = this.tree.getChecked('demoId1');
-        console.log(checkData);
+      var checkData = this.tree.getChecked('demoId1');
+      console.log(checkData);
+      var list = [];
+      for(let i = 0; i < checkData.length; i++){
+        let menuone = checkData[i];
+        if(menuone.children.length){
+          for(let a = 0; a < menuone.children.length; a++){
+            let menutwo = menuone.children[a];
+            list.push(menutwo.id);
+          } 
+        }
+      }
+      console.log(list);
+      let params = {
+        roleId: this.id,
+        powerIds: list
+      }
+      assignRolePermissions(params).then(res => {
+        if(res.code === 0){
+          this.$message.success('权限分配成功')       
+          setTimeout(() => {
+            this.$router.push({name: 'roleManagement'});
+          },1000)          
+        }else{
+            this.$message.warning(res.msg);
+        }
+      })
     },
     goback(){
         this.$router.back(-1);

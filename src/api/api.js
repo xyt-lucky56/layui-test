@@ -62,7 +62,7 @@ export const roleEdit = function(params){
 // 查询角色权限
 const QUERYPERMISSIONS='/system/permissionsToQueryRoles'
 export const queryRolePermissions = function(params){
-    return https(QUERYPERMISSIONS, params, 'post');
+    return https(QUERYPERMISSIONS, params, 'post', 'form');
 }
 
 // 角色权限分配

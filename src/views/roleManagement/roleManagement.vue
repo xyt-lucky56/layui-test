@@ -40,7 +40,7 @@ export default {
         let url = 'api/api-a-bkf-/user-mucon' + QUERYROLELIST;
         // console.log(url)
         FengunionTable('tableRole', url, this.cols, {}, true,this.limit, 'post', function(e) {//表格初始化
-            console.log(e)
+            // console.log(e)
         }) 
         layui.use(['table'], () => {
             this.editorBtn(layui.table)
@@ -55,8 +55,7 @@ export default {
                 if (obj.event === 'detail') {                   
                     this.$router.push({name: 'subrole', params: { type: 'detail', data }});
                 } else if (obj.event === 'del') {
-                    this.$message.confirm('真的删除行么').then(() => {
-                        
+                    this.$message.confirm('真的删除行么').then(() => {                        
                         let params={
                             id:data.id
                         }
@@ -67,17 +66,14 @@ export default {
                                 table.reload('tableRole', {
                                     url: url
                                 });
-                                // layer.close(index);
+                               
                             }
                         })
-                    
-                        
                     })
-                } else if (obj.event === 'edit') {
-                    // layer.alert('编辑行：<br>' + JSON.stringify(data))
+                } else if (obj.event === 'edit') { 
                     this.$router.push({name: 'subrole', params: { type: 'edit', data }});
                 } else if(obj.event === 'assign') {
-                    this.$router.push({ name: 'rolePower' })
+                    this.$router.push({ name: 'rolePower', params: { id: data.id } })
                 }
             });
         },

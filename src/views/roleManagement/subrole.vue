@@ -61,8 +61,7 @@ export default {
                 this.isreadonly = true;
                 this.title = "角色详情";                
             }
-        }
-        
+        }    
     },
     mounted(){
         layui.use(['form'], ()=>{
@@ -76,7 +75,7 @@ export default {
         layui.use(['form'], ()=>{
             var form = layui.form;
             form.render();  
-            console.log(this.roledata); 
+            // console.log(this.roledata); 
             form.val("formTest", {  // 设置初始值
                 "rolename": this.roledata.rolename
                 , "systemname": this.roledata.systemname
