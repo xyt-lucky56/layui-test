@@ -20,7 +20,7 @@ export default function (tableId, url, headerData, params, isPage = true, limit 
             , cols: headerData
             , dataType: "json"
             , id: tableId
-            , limit: limit               
+            , limit: limit             
             , done: function(res, curr, count) {
                 callback({ res, curr, count })                                                   
             }

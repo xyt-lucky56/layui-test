@@ -76,17 +76,14 @@ const QUERYSYSNAMELIST='/system/querySystemInfoNoPage'
 export const querySysnameList = function(params){
     return https(QUERYSYSNAMELIST, params, 'post');
 }
+
+
 /**---------权限管理--------- */
+
 //查询所有权限菜单
 const PERMISSIONSMENU='/system/queryPermissionsMeun'
 export const permissionsMenu = function(params){
-    return https(PERMISSIONSMENU, params, 'post');
-}
-
-//查询系统名称
-const SYSTEMINFONOPAGE='/system/querySystemInfoNoPage'
-export const querySystemInfoNoPage= function(params){
-    return https(SYSTEMINFONOPAGE, params, 'post');
+    return https(PERMISSIONSMENU, params, 'post', 'form');
 }
 
 //查询一级菜单列表

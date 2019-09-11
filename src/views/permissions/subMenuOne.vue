@@ -77,7 +77,7 @@
     </div>
 </template>
 <script>
-import { queryGroupinfoById,querySystemInfoNoPage,editGroupinfo,addGroupinfos,deletePowerinfos } from '@/api/api'
+import { queryGroupinfoById,querySysnameList,editGroupinfo,addGroupinfos,deletePowerinfos } from '@/api/api'
 // import { viewList,roleTypes } from '@/filter/groupList'
 import FengunionTable from '@/utils/comTable'//表格封装
 // import  { setCookie } from '@/utils/cookie'
@@ -154,7 +154,7 @@ export default {
     },
     methods:{
         getSystem(){//获取系统名称
-            querySystemInfoNoPage().then(res=>{
+            querySysnameList().then(res=>{
                 // console.log(res)
                 if(res.code==0){
                     this.systemnameList=res.data
