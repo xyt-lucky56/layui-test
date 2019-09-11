@@ -75,3 +75,11 @@ export const filterData = function(value){
         return '--'
     }
 }
+
+export const isexpands = function(val){
+    if(val){
+        return '是'
+    }else{
+        return '否'
+    }
+}

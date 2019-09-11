@@ -78,6 +78,12 @@ export const permissionsMenu = function(params){
     return https(PERMISSIONSMENU, params, 'post');
 }
 
+//查询系统名称
+const SYSTEMINFONOPAGE='/system/querySystemInfoNoPage'
+export const querySystemInfoNoPage= function(params){
+    return https(SYSTEMINFONOPAGE, params, 'post');
+}
+
 //查询一级菜单列表
 const QUERYGROUPINFO='/system/queryGroupinfo'
 export const queryGroupinfo = function(params){
@@ -99,7 +105,7 @@ export const addGroupinfos = function(params){
 //查询一级菜单详情
 const QUERYGROUPINFOBYID='/system/queryGroupinfoById'
 export const queryGroupinfoById = function(params){
-    return https(QUERYGROUPINFOBYID, params, 'post');
+    return https(QUERYGROUPINFOBYID, params, 'post','form');
 }
 
 //编辑一级菜单

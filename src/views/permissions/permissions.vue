@@ -24,8 +24,10 @@
     </div>
 </template>
 <script>
+import { filterData,isexpands } from '@/filter/groupList'
 import FengunionTable from '@/utils/comTable'//表格封装
 import { sysnameList, filterViewType } from "@/filter/groupList"
+import { permissionsMenu } from "@/api/api"
 export default {
     data() {
         return {
@@ -47,18 +49,26 @@ export default {
                 }]
             }],
             cols:[[
-                {field:'ID', title: '编号', width:150, sort: true},
-                {field:'menuName', title: '菜单名称'},
-                {field:'powerType', title: '权限类型'},
-                {field:'relativePath', title: '相对文件路径'},
-                {field:'relativeFileName', title: '相对文件名称'},
-                {field:'viewType', title: '界面类型'},
-                {field:'menuDisc', title: '菜单说明'},
+                {field:'id', title: '编号', width:150, sort: true},
+                {field:'groupname', title: '菜单名称'},
+                {field:'systemname', title: '系统名称'},
+                {field:'picpath', title: '图片路径',templet:function(res){
+                    return filterData(res.picpath)
+                }},
+                {field:'picname', title: '图片名称',templet:function(res){
+                    return filterData(res.picname)
+                }},
+                {field:'isexpand', title: '是否展开',templet:function(res){
+                    return isexpands(res.isexpand)
+                }},
+                {field:'sortno', title: '出现顺序'},
+                {field:'remark', title: '备注'},
                 {field:'status', title: '操作',toolbar: '#barDemo',width:210,fixed: 'right'},
             ]],
             limit:10,
             limits:[5,7,10],
-            showChildTable: false
+            showChildTable: false,
+            systemname:''
         }
     },
     mounted() {
@@ -74,7 +84,7 @@ export default {
             this.editorBtn(layui.table)
             this.table = layui.table;    
         });
-        FengunionTable('test1', '/api/permission/permissionList', this.cols, {}, true,this.limit, 'get', filterViewType).then(e => {//表格初始化
+        FengunionTable('test1', 'api/api-a-bkf-/user-mucon/system/queryGroupinfo', this.cols, {systemname:this.systemname}, true,this.limit, 'post', function(e){
             console.log(e)
         })
     },
@@ -85,7 +95,8 @@ export default {
                 ,id: 'classtree'
                 ,data: this.treedata
                 ,click: (obj) => {
-                    // console.log(obj.elem); //得到当前节点元素 
+                    console.log(obj); //得到当前节点元素 
+                    this.systemname=obj.data.title
                     $('div.layui-tree-set').each(function() {
                         $(this).removeClass("bgdetail");
                     })  
@@ -94,10 +105,10 @@ export default {
                     }
 
                     // console.log(obj.data); //得到当前点击的节点数据
-                    let params = {id: obj.data.id}
+                    let params = {systemname: this.systemname}
                     // console.log(params);
                     this.table.reload('test1', {
-                        url: '/api/permission/permissionList'
+                        url: 'api/api-a-bkf-/user-mucon/system/queryGroupinfo'
                         ,where: params //设定异步数据接口的额外参数
                     });
 
@@ -140,11 +151,11 @@ export default {
             table.on('tool(test1)', (obj) => {
                 // console.log(obj)
                 var data = obj.data;
-                if (obj.event === 'del') {
+                if (obj.event === 'del') {//删除
                     this.$message.confirm('真的删除行么').then(() => {
                         obj.del();
                     })
-                } else if (obj.event === 'edit') {
+                } else if (obj.event === 'edit') {//编辑
                     if(this.showChildTable){
                         this.$router.push({name: 'subMenuChild', params: { data }});
                     }else{
