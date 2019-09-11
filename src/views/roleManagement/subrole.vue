@@ -61,8 +61,7 @@ export default {
                 this.isreadonly = true;
                 this.title = "角色详情";                
             }
-        }
-        
+        }    
     },
     mounted(){
         layui.use(['form'], ()=>{
@@ -76,7 +75,7 @@ export default {
         layui.use(['form'], ()=>{
             var form = layui.form;
             form.render();  
-            console.log(this.roledata); 
+            // console.log(this.roledata); 
             form.val("formTest", {  // 设置初始值
                 "rolename": this.roledata.rolename
                 , "systemname": this.roledata.systemname
@@ -118,29 +117,42 @@ export default {
         },
         formSubmit(form){
             //监听提交
-            form.on('submit(subrole)', function(data){
-                if(this.roledata){
+            form.on('submit(subrole)', (data) => {
+                let dataon = data.field;
+                if(this.roledata.id){
                     let params = {
                         id: this.roledata.id,
-                        rolename: data.rolename,
-                        systemname: data.systemname,
-                        remark: data.remark
-                    }
+                        rolename: dataon.rolename,
+                        systemname: dataon.systemname,
+                        remark: dataon.remark
+                    }               
                     roleEdit(params).then(res => {
-                        if(res.code === 0){
-                            
+                        if(res.code === 0){                            
                             this.$message.success('角色编辑成功');
-                            
+                            setTimeout(() => {
+                                this.$router.back(-1);
+                            },1000)                            
+                        }else{
+                            this.$message.warning(res.msg);
+                        }
+                    })
+                }else {
+                    let params = {
+                        rolename: dataon.rolename,
+                        systemname: dataon.systemname,
+                        remark: dataon.remark
+                    }
+                    addRole(params).then(res => {
+                        if(res.code === 0){                           
+                            this.$message.success('角色添加成功');
+                            setTimeout(() => {
+                                this.$router.push({name: 'roleManagement'});
+                            },1000)
                         }else{
                             this.$message.warning(res.msg);
                         }
                     })
                 }
-
-                // layer.alert('提交成功', {
-                //     title: '最终的提交信息'
-                // })
-                // return false;
             });
         },        
         goback(){

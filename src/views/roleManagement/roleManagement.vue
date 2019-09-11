@@ -13,9 +13,7 @@
                     <a class="layui-btn layui-btn-xs bgwarn" lay-event="del">删除</a>
                 </div>
             </table>
-            <!-- <script type="text/html" id="titleTpl">
-                <span>{{ d.systemName | filterSysName }}</span>
-            </script> -->
+           
         </div>       
     </div>
 </template>
@@ -40,9 +38,9 @@ export default {
     },
     mounted(){
         let url = 'api/api-a-bkf-/user-mucon' + QUERYROLELIST;
-        console.log(url)
-        FengunionTable('tableRole', url, this.cols, {}, true,this.limit, 'post').then(e => {//表格初始化
-            console.log(e)
+        // console.log(url)
+        FengunionTable('tableRole', url, this.cols, {}, true,this.limit, 'post', function(e) {//表格初始化
+            // console.log(e)
         }) 
         layui.use(['table'], () => {
             this.editorBtn(layui.table)
@@ -52,20 +50,30 @@ export default {
         // 监听表格操作按钮  (要想按钮触发此事件，需添加lay-event)
         editorBtn(table) {
             table.on('tool(tableRole)', (obj) => {
-                // console.log(obj)
+                
                 var data = obj.data;
-                if (obj.event === 'detail') {
-                    // this.$message.success('恭喜您，打开成功')
+                if (obj.event === 'detail') {                   
                     this.$router.push({name: 'subrole', params: { type: 'detail', data }});
                 } else if (obj.event === 'del') {
-                    this.$message.confirm('真的删除行么').then(() => {
-                        obj.del();
+                    this.$message.confirm('真的删除行么').then(() => {                        
+                        let params={
+                            id:data.id
+                        }
+                        roleDelete(params).then(res=>{
+                            console.log(res)
+                            if(res.code==0){
+                                let url = 'api/api-a-bkf-/user-mucon' + QUERYROLELIST
+                                table.reload('tableRole', {
+                                    url: url
+                                });
+                               
+                            }
+                        })
                     })
-                } else if (obj.event === 'edit') {
-                    // layer.alert('编辑行：<br>' + JSON.stringify(data))
+                } else if (obj.event === 'edit') { 
                     this.$router.push({name: 'subrole', params: { type: 'edit', data }});
                 } else if(obj.event === 'assign') {
-                    this.$router.push({ name: 'rolePower' })
+                    this.$router.push({ name: 'rolePower', params: { id: data.id } })
                 }
             });
         },
