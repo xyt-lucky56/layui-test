@@ -100,16 +100,18 @@ export default {
     },
     created() {
         // console.log(this.$route.params);
-        if(!this.$route.params.addflag){       
-            this.id = this.$route.params.data.id;
-            this.title = "编辑子菜单";
-            this.status=true
-            this.getSubmenuChildInfo()
-        }else{
-            this.addflag=this.$route.params.addflag
-            this.groupId=this.$route.params.data.id
-            // console.log(this.groupId)
-        }       
+        if(JSON.stringify(this.$route.params)!='{}'){
+            if(!this.$route.params.addflag){ 
+                this.id = this.$route.params.data.id;
+                this.title = "编辑子菜单";
+                this.status=true
+                this.getSubmenuChildInfo()
+            }else{
+                this.addflag=this.$route.params.addflag
+                this.groupId=this.$route.params.data.id
+                // console.log(this.groupId)
+            }       
+        }
     },
     mounted(){
         layui.use(['form'], ()=>{

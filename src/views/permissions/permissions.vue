@@ -12,7 +12,29 @@
                 <div id="classtree" class="demo-tree"></div>
             </div>
             <div class="content-right left">
-                <button class="layui-btn addbtn" @click="addMenu">{{showChildTable? '添加子菜单' : '添加一级菜单'}}</button> 
+                <div class="demoTable">
+                    <form class="layui-form">
+                        <div class="layui-form-item layui-inline">
+                            <div class="layui-input-block">
+                                <button class="layui-btn addbtn" @click="addMenu">{{showChildTable? '添加子菜单' : '添加一级菜单'}}</button> 
+                            </div>
+                        </div>
+                        <div class="right">
+                            <div class="layui-form-item layui-inline">
+                                <!-- <label class="layui-form-label">订单号：</label> -->
+                                <div class="layui-input-inline">
+                                    <input class="layui-input" name="waybillId" autocomplete="off" v-model="searchInp">
+                                </div>
+                            </div>
+                            <div class="layui-form-item layui-inline">
+                                <div class="layui-input-block">
+                                    <div class="layui-btn" @click="search">搜索</div>
+                                    <div type="reset" class="layui-btn layui-btn-primary">重置</div>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
                 <table v-show="!showChildTable" class="layui-hide" lay-filter="test1" id="test1">
                     <div id="barDemo">
                         <a v-show="!showChildTable" class="layui-btn layui-btn-xs" lay-event="jump">添加子菜单</a>
@@ -70,6 +92,7 @@ export default {
             showChildTable: false,
             systemname:'',
             isFirst: true,
+            searchInp:''
         }
     },
     created() {
@@ -248,6 +271,12 @@ export default {
             }else{
                 this.$router.push({name: "subMenuOne"});;
             }            
+        },
+        search(){  
+            this.table.reload('test1', {
+                url: 'api/api-a-bkf-/user-mucon/system/queryGroupinfo'
+                ,where: {systemname: this.searchInp} //设定异步数据接口的额外参数
+            });
         }
     }
 }
@@ -272,7 +301,10 @@ export default {
         }
         .content-right{
             width: 80%;
-            height: 100%;        
+            height: 100%;     
+            .layui-input-block{
+                margin-left: 0;
+            }            
         }
     }
 }
