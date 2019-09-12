@@ -15,13 +15,7 @@
                 <button class="layui-btn addbtn" @click="addMenu">{{showChildTable? '添加子菜单' : '添加一级菜单'}}</button> 
                 <table v-show="!showChildTable" class="layui-hide" lay-filter="test1" id="test1">
                     <div id="barDemo">
-                        <a class="layui-btn layui-btn-xs" lay-event="jump">添加子菜单</a>
-                        <a class="layui-btn layui-btn-xs bgeditor" lay-event="edit">编辑</a>
-                        <a class="layui-btn layui-btn-xs bgwarn" lay-event="del">删除</a>
-                    </div>
-                </table>
-                <table v-show="showChildTable" class="layui-hide" lay-filter="test2" id="test2">
-                    <div id="barDemo2">   
+                        <a v-show="!showChildTable" class="layui-btn layui-btn-xs" lay-event="jump">添加子菜单</a>
                         <a class="layui-btn layui-btn-xs bgeditor" lay-event="edit">编辑</a>
                         <a class="layui-btn layui-btn-xs bgwarn" lay-event="del">删除</a>
                     </div>
@@ -61,13 +55,15 @@ export default {
             ]],
             cols2:[[
                 {field:'id', title: '编号', width:150, sort: true},
-                {field:'groupname', title: '菜单名称'},
-                {field:'groupname', title: '权限类型'},
-                {field:'groupname', title: '相对文件路径'},
-                {field:'groupname', title: '相对文件名称'},
-                {field:'groupname', title: '界面类型'},
+                {field:'powername', title: '菜单名称'},
+                {field:'powertype', title: '权限类型'},
+                {field:'relativepath', title: '相对文件路径'},
+                {field:'filename', title: '相对文件名称'},
+                {field:'formtype', title: '界面类型',templet:function(res){
+                    return res.formtype
+                }},
                 {field:'remark', title: '菜单说明'},
-                {field:'status', title: '操作',toolbar: '#barDemo2',width:210,fixed: 'right'},
+                // {field:'status', title: '操作',toolbar: '#barDemo2',width:210,fixed: 'right'},
             ]],
             limit: 10,
             limits:[5,7,10],
@@ -93,8 +89,10 @@ export default {
                         this.sysnameList.push(obj);
                     })
                     console.log(this.sysnameList);
-                    this.showtree();
-                    
+                    setTimeout(() => {
+                        this.showtree();
+                    }, 100)
+                                       
                 }else{
                     this.$message.warning(res.msg);
                 }
@@ -177,6 +175,7 @@ export default {
                         this.table.reload('test1', {
                             url: '/api/api-a-bkf-/user-mucon/system/queryGroupinfo'
                             ,where: params //设定异步数据接口的额外参数
+                            ,cols: this.cols
                         });
                         this.showChildTable = false;
                     }else{
@@ -184,17 +183,13 @@ export default {
                         let params = {
                             groupId: data.id
                         }
-                        if(this.isFirst){
-                            FengunionTable('test2', 'api/api-a-bkf-/user-mucon/system/queryPowerinfo', this.cols2, params, true,this.limit, 'post', function(e){
-                                console.log(e)
-                            })
-                        }else{
-                            this.isFirst = false;
-                            this.table.reload('test2', {
-                                url: '/api/api-a-bkf-/user-mucon/system/queryPowerinfo'
-                                ,where: params //设定异步数据接口的额外参数
-                            });
-                        } 
+                        
+                        this.isFirst = false;
+                        this.table.reload('test1', {
+                            url: '/api/api-a-bkf-/user-mucon/system/queryPowerinfo'
+                            ,where: params //设定异步数据接口的额外参数
+                            ,cols: this.cols2
+                        });
                     }
                     
                 }
@@ -205,6 +200,7 @@ export default {
             this.table.reload('test1', {
                 url: '/api/api-a-bkf-/user-mucon/system/queryGroupinfo'
                 ,where: params //设定异步数据接口的额外参数
+                ,cols: this.cols
             });
 
         },
