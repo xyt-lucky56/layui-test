@@ -54,7 +54,7 @@
                 <div class="layui-form-item">                
                     <label class="layui-form-label">菜单描述：</label>
                     <div class="layui-input-block">
-                        <textarea name='remark' placeholder="请输入内容" class="layui-textarea"></textarea>
+                        <textarea name='remark' lay-verify="required" placeholder="请输入内容" class="layui-textarea"></textarea>
                     </div>
                 </div>    
                 <div class="layui-form-item" v-if="status">                
@@ -200,7 +200,8 @@ export default {
         checkForm(form){
             form.verify({                
                 // menuName:[/^[\u2E80-\u9FFF]+$/,'菜单名称不合法'],
-                picname:[/[^\s]+\.(jpg|jpeg|gif|png|bmp)/i,'图片名称不合法'],
+                // filename:[/[^\s]+\.(txt|doc|html)/i,'文件名称不合法'],
+                picname:[/[^\s]+\.(jpg|jpeg|png|bmp)/i,'图片名称不合法'],
             })
         },
         cancel(){

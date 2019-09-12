@@ -18,7 +18,7 @@
                 <div class="layui-form-item">                
                     <label class="layui-form-label">系统版本号 :</label>
                     <div class="layui-input-block">
-                        <input type="text" name="versionno" :readonly="status" lay-verify="required|version" autocomplete="off" placeholder="请输入系统版本号" lay-verType='tips' class="layui-input">
+                        <input type="text" name="versionno" :readonly="status" lay-verify="required|versionno" autocomplete="off" placeholder="请输入系统版本号" lay-verType='tips' class="layui-input">
                     </div>
                 </div>                
                 <div class="layui-form-item">                
@@ -150,7 +150,7 @@ export default {
         },
         checkForm(form){
             form.verify({
-                versionno:[/^([1-9]\d|[1-9])(\.([1-9]\d|\d)){2}$/,'版本号不符合规则']
+                versionno:[/^\d+\.\d+\.\d+$/,'版本号不符合规则']
             })
         },
         cancel(){
