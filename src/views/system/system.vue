@@ -82,7 +82,7 @@ export default {
                 if(obj.event === 'detail'){//查看
                     this.$router.push({name:'subsystem',params:{data}});
                 }else if(obj.event === 'del'){
-                    layer.confirm('真的删除行么', function(index){
+                    layer.confirm('真的删除么', function(index){
                         let params={
                             id:data.id
                         }

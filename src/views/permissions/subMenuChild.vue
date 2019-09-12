@@ -54,7 +54,7 @@
                 <div class="layui-form-item">                
                     <label class="layui-form-label">菜单描述：</label>
                     <div class="layui-input-block">
-                        <textarea name='remark' placeholder="请输入内容" class="layui-textarea"></textarea>
+                        <textarea name='remark' lay-verify="required" placeholder="请输入内容" class="layui-textarea"></textarea>
                     </div>
                 </div>    
                 <div class="layui-form-item" v-if="status">                
@@ -99,8 +99,7 @@ export default {
         }
     },
     created() {
-        // console.log(this.viewList);
-        console.log(this.$route.params);
+        // console.log(this.$route.params);
         if(!this.$route.params.addflag){       
             this.id = this.$route.params.data.id;
             this.title = "编辑子菜单";
@@ -172,7 +171,9 @@ export default {
                     addPowerinfo(params).then(res=>{
                         if(res.code==0){
                             this.$message.success('提交成功')
-                            this.$router.push('/admin/permissions')
+                            setTimeout(() => {
+                                this.$router.push('/admin/permissions')
+                            },1000) 
                             return false
                         }else{
                             this.$message.error(res.msg);
@@ -187,7 +188,9 @@ export default {
                     editPowerinfos(params).then(res=>{
                         if(res.code==0){
                             this.$message.success('修改成功')
-                            this.$router.back(-1);
+                            setTimeout(() => {
+                                this.$router.back(-1);
+                            },1000) 
                             // this.$router.push('/admin/permissions')
                             return false
                         }else{
@@ -200,7 +203,8 @@ export default {
         checkForm(form){
             form.verify({                
                 // menuName:[/^[\u2E80-\u9FFF]+$/,'菜单名称不合法'],
-                picname:[/[^\s]+\.(jpg|jpeg|gif|png|bmp)/i,'图片名称不合法'],
+                // filename:[/[^\s]+\.(txt|doc|html)/i,'文件名称不合法'],
+                picname:[/[^\s]+\.(jpg|jpeg|png|bmp)/i,'图片名称不合法'],
             })
         },
         cancel(){

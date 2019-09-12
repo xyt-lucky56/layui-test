@@ -44,7 +44,7 @@
                 <div class="layui-form-item">                
                     <label class="layui-form-label">出现顺序 :</label>
                     <div class="layui-input-block">
-                        <input type="text" name="sortno" lay-verify="required|sortno" autocomplete="off" placeholder="请输入出现顺序" lay-verType='tips' class="layui-input">
+                        <input type="text" name="sortno" lay-verify="required|number" autocomplete="off" placeholder="请输入出现顺序" lay-verType='tips' class="layui-input">
                     </div>
                 </div>
                 <div class="layui-form-item">                
@@ -99,7 +99,9 @@ export default {
                 }},
                 {field:'relativepath', title: '相对文件路径'},
                 {field:'filename', title: '相对文件名称'},
-                {field:'remark', title: '菜单描述'},
+                {field:'remark', title: '菜单描述',templet:function(res){
+                    return filterData(res.remark)
+                }},
                 {field:'status', title: '操作',toolbar: '#barDemo',width:200,fixed: 'right'},
             ]],
             isexpandList:[{val:false,lab:'否'},{val:true,lab:'是'}],
@@ -213,7 +215,9 @@ export default {
                     editGroupinfo(params).then(res=>{
                         if(res.code==0){
                             this.$message.success('修改成功')
-                            this.$router.push('/admin/permissions')
+                            setTimeout(() => {
+                                this.$router.push('/admin/permissions')
+                            },1000) 
                             return false
                         }else{
                             this.$message.error(res.msg);
@@ -223,7 +227,9 @@ export default {
                     addGroupinfos(params).then(res=>{
                         if(res.code==0){
                             this.$message.success('提交成功')
-                            this.$router.push('/admin/permissions')
+                            setTimeout(() => {
+                                this.$router.push('/admin/permissions')
+                            },1000) 
                             return false
                         }else{
                             this.$message.error(res.msg);
@@ -235,7 +241,7 @@ export default {
         checkForm(form){
             form.verify({                
                 // menuName:[/^[\u2E80-\u9FFF]+$/,'菜单名称不合法'],
-                picname:[/[^\s]+\.(jpg|jpeg|gif|png|bmp)/i,'图片名称不合法'],
+                picname:[/[^\s]+\.(jpg|jpeg|png|bmp)/i,'图片名称不合法'],
             })
         },
         statusChange(table){
@@ -245,7 +251,7 @@ export default {
                 if(obj.event === 'edit'){//编辑
                     this.$router.push({name:'subMenuChild',params:{data}});
                 }else if(obj.event === 'del'){
-                    layer.confirm('真的删除行么', (index)=>{
+                    layer.confirm('真的删除么', (index)=>{
                         let params={
                             id:data.id
                         }
