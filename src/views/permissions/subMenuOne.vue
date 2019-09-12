@@ -251,7 +251,7 @@ export default {
                 if(obj.event === 'edit'){//编辑
                     this.$router.push({name:'subMenuChild',params:{data}});
                 }else if(obj.event === 'del'){
-                    layer.confirm('真的删除行么', (index)=>{
+                    layer.confirm('真的删除么', (index)=>{
                         let params={
                             id:data.id
                         }

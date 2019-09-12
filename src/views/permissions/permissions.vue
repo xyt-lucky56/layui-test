@@ -210,7 +210,7 @@ export default {
                 // console.log(obj)
                 var data = obj.data;
                 if (obj.event === 'del') {//删除
-                    layer.confirm('真的删除行么', (index)=>{
+                    layer.confirm('删除该菜单，所属的子菜单会一同删除', (index)=>{
                         let params={
                             id:data.id,
                             count:1
