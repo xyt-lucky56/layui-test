@@ -167,9 +167,11 @@ export default {
                     ,data: this.treedata
                 })
                 layui.form.on('select(myselect)', (data) => {
-                    console.log(data.value);
-                    this.getTreedata(data.value);
-                    this.systemname=data.value
+                    // console.log(data.value);
+                    if(data.value){
+                        this.getTreedata(data.value);
+                        this.systemname=data.value
+                    } 
                 })
                 
             });
@@ -212,7 +214,7 @@ export default {
                     this.menuId=data.id
                     if(data.children){
                         this.showChildTable = false;
-                        let param = { systemname: val }
+                        let param = { systemname: val, searchName: '' }
                         this.table.reload('test1', {
                             url: '/api/api-a-bkf-/user-mucon/system/queryGroupinfo'
                             ,where: param //设定异步数据接口的额外参数
@@ -221,7 +223,8 @@ export default {
                     }else{
                         this.showChildTable = true;
                         let params = {
-                            groupId: data.id
+                            groupId: data.id,
+                            searchName: ''
                         }
                         this.table.reload('test1', {
                             url: '/api/api-a-bkf-/user-mucon/system/queryPowerinfo'
@@ -233,7 +236,7 @@ export default {
                 }
             })
            
-            let param = { systemname: val }
+            let param = { systemname: val, searchName: '' }
             this.table.reload('test1', {
                 url: '/api/api-a-bkf-/user-mucon/system/queryGroupinfo'
                 ,where: param //设定异步数据接口的额外参数
@@ -286,25 +289,27 @@ export default {
                 this.$router.push({name: "subMenuOne"});;
             }            
         },
-        search(){  
-            if(this.showChildTable){
-                this.table.reload('test1', {
-                    url: '/api/api-a-bkf-/user-mucon/system/queryPowerinfo'
-                    ,where: {
-                        groupId:this.menuId,
-                        searchName:this.searchInp
-                    } //设定异步数据接口的额外参数
-                    ,cols: this.cols2
-                });
-            }else{
-                this.table.reload('test1', {
-                    url: 'api/api-a-bkf-/user-mucon/system/queryGroupinfo'
-                    ,where: {
-                        systemname:this.systemname,
-                        searchName: this.searchInp
-                    } //设定异步数据接口的额外参数
-                });
-            }
+        search(){
+            if(this.searchInp && this.treedata.length){
+                if(this.showChildTable){
+                    this.table.reload('test1', {
+                        url: '/api/api-a-bkf-/user-mucon/system/queryPowerinfo'
+                        ,where: {
+                            groupId:this.menuId,
+                            searchName:this.searchInp
+                        } //设定异步数据接口的额外参数
+                        ,cols: this.cols2
+                    });
+                }else{
+                    this.table.reload('test1', {
+                        url: 'api/api-a-bkf-/user-mucon/system/queryGroupinfo'
+                        ,where: {
+                            systemname:this.systemname,
+                            searchName: this.searchInp
+                        } //设定异步数据接口的额外参数
+                    });
+                }
+            }    
         },
         reset(){
             this.searchInp=''
