@@ -12,8 +12,8 @@
                 <div id="classtree" class="demo-tree"></div>
             </div>
             <div class="content-right left">
-                <button class="layui-btn addbtn" @click="addMenu">{{showChildTable? '添加子菜单' : '添加一级菜单'}}</button> 
-                <table v-show="!showChildTable" class="layui-hide" lay-filter="test1" id="test1">
+                <button class="layui-btn addbtn" @click="addMenu">{{showChildTable? '添加子菜单' : '添加一级菜单'}}</button>
+                <table class="layui-hide" lay-filter="test1" id="test1">
                     <div id="barDemo">
                         <a v-show="!showChildTable" class="layui-btn layui-btn-xs" lay-event="jump">添加子菜单</a>
                         <a class="layui-btn layui-btn-xs bgeditor" lay-event="edit">编辑</a>
@@ -69,7 +69,6 @@ export default {
             limits:[5,7,10],
             showChildTable: false,
             systemname:'',
-            isFirst: true,
         }
     },
     created() {
@@ -88,7 +87,7 @@ export default {
                         obj.id = item.id;
                         this.sysnameList.push(obj);
                     })
-                    console.log(this.sysnameList);
+
                     setTimeout(() => {
                         this.showtree();
                     }, 100)
@@ -105,20 +104,23 @@ export default {
             permissionsMenu(params).then(res => {
                 if(res.code === 0){                            
                     var treedata = [];
-                    var obj1 = {}, list = res.data[0].list;
-                    obj1.id = res.data[0].id;
-                    obj1.title = res.data[0].systemname;
-                    obj1.children = []; 
-                    if(list.length){
-                        for(let a = 0; a < list.length; a++){
-                            let menutwo = list[a];
-                            let obj2 = {};
-                            obj2.id = menutwo.groupId;
-                            obj2.title = menutwo.groupname;
-                            obj1.children.push(obj2);
-                        } 
+                    if(res.data.length>=1){
+                        var obj1 = {}, list = res.data[0].list;
+                        obj1.id = res.data[0].id;
+                        obj1.title = res.data[0].systemname;
+                        obj1.children = []; 
+                        if(list.length){
+                            for(let a = 0; a < list.length; a++){
+                                let menutwo = list[a];
+                                let obj2 = {};
+                                obj2.id = menutwo.groupId;
+                                obj2.title = menutwo.groupname;
+                                obj1.children.push(obj2);
+                            } 
+                        }
+                        treedata.push(obj1);
                     }
-                    treedata.push(obj1);
+                    
                     console.log(treedata);
                     this.treedata = treedata;
                     this.reloadData(val);                         
@@ -146,8 +148,20 @@ export default {
                 })
                 
             });
-            FengunionTable('test1', 'api/api-a-bkf-/user-mucon/system/queryGroupinfo', this.cols, {}, true,this.limit, 'post', function(e){
-                console.log(e)
+
+            var cols = this.cols;
+            layui.use('table', function () {
+                let table = layui.table
+                table.render({
+                    elem: "#test1"
+                    , method: "post"
+                    , page: true  //开启分页 ||pageC
+                    , cols: cols
+                    , dataType: "json"
+                    , id: 'test1'
+                    , limit: 10
+                    , data: []          
+                });
             })
             
         },
@@ -171,20 +185,18 @@ export default {
                     console.log(obj.data); //得到当前点击的节点数据
                     let data = obj.data;
                     if(data.children){
-                        let params = {systemname: this.systemname}
+                        this.showChildTable = false;
+                        let param = { systemname: val }
                         this.table.reload('test1', {
                             url: '/api/api-a-bkf-/user-mucon/system/queryGroupinfo'
-                            ,where: params //设定异步数据接口的额外参数
+                            ,where: param //设定异步数据接口的额外参数
                             ,cols: this.cols
                         });
-                        this.showChildTable = false;
                     }else{
                         this.showChildTable = true;
                         let params = {
                             groupId: data.id
                         }
-                        
-                        this.isFirst = false;
                         this.table.reload('test1', {
                             url: '/api/api-a-bkf-/user-mucon/system/queryPowerinfo'
                             ,where: params //设定异步数据接口的额外参数
@@ -194,12 +206,11 @@ export default {
                     
                 }
             })
-            // console.log(this.treedata);
-            let param = {id: this.treedata[0].children[0].id }
-            console.log(param);
+           
+            let param = { systemname: val }
             this.table.reload('test1', {
                 url: '/api/api-a-bkf-/user-mucon/system/queryGroupinfo'
-                ,where: params //设定异步数据接口的额外参数
+                ,where: param //设定异步数据接口的额外参数
                 ,cols: this.cols
             });
 
@@ -275,5 +286,10 @@ export default {
             height: 100%;        
         }
     }
+}
+.tabletest {
+    text-align: center;
+    width: 100%;
+    height: 200px;
 }
 </style>
