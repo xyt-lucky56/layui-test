@@ -12,7 +12,7 @@
                 <div class="layui-form-item">                
                     <label class="layui-form-label">系统描述 :</label>
                     <div class="layui-input-block">
-                        <input type="text" name="systemcontent" :readonly="status" lay-verify="required" autocomplete="off" placeholder="请输入系统描述" lay-verType='tips' class="layui-input ">
+                        <input type="text" name="systemcontent" :readonly="status" lay-verify="required" autocomplete="off" placeholder="请输入系统描述" lay-verType='tips' class="layui-input systemcontent">
                     </div>
                 </div>                
                 <div class="layui-form-item">                
@@ -174,6 +174,12 @@ export default {
                 padding-top: 20px;
                 margin: 0 auto;
                 .layui-input-block{
+                    .systemcontent{
+                        overflow: hidden;
+                        text-overflow:ellipsis;
+                        white-space: nowrap;
+                        padding-right: 10px;
+                    }
                     span{
                         display: inline-block;
                         width: 100%;

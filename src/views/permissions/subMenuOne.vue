@@ -100,11 +100,7 @@ export default {
                 {field:'relativepath', title: '相对文件路径'},
                 {field:'filename', title: '相对文件名称'},
                 {field:'remark', title: '菜单描述',templet:function(res){
-                    if(res.remark&&res.remark!=null){
-                        return res.remark
-                    }else{
-                        return '无'
-                    }
+                    return filterData(res.remark)
                 }},
                 {field:'status', title: '操作',toolbar: '#barDemo',width:200,fixed: 'right'},
             ]],

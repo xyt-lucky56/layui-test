@@ -88,3 +88,6 @@ body,div,span,header,footer,nav,section,aside,article,ul,dl,dt,dd,li,a,p,h1,h2,h
   .layui-table tr td{
     text-align: center;
   }
+  .content{
+    min-height: 600px;
+  }
