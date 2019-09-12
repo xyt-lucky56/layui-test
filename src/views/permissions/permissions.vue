@@ -16,7 +16,7 @@
                     <form class="layui-form">
                         <div class="layui-form-item layui-inline">
                             <div class="layui-input-block">
-                                <button class="layui-btn addbtn" @click="addMenu">{{showChildTable? '添加子菜单' : '添加一级菜单'}}</button> 
+                                <div class="layui-btn addbtn" @click="addMenu">{{showChildTable? '添加子菜单' : '添加一级菜单'}}</div> 
                             </div>
                         </div>
                         <div class="right">
