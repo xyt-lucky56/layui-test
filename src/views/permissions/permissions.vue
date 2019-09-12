@@ -309,7 +309,7 @@ export default {
         reset(){
             this.searchInp=''
             if(this.showChildTable){
-                 this.table.reload('test1', {
+                this.table.reload('test1', {
                     url: '/api/api-a-bkf-/user-mucon/system/queryPowerinfo'
                     ,where: {
                         groupId:this.menuId,
