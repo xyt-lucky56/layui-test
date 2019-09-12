@@ -128,7 +128,9 @@ export default {
                         // console.log(res)
                         if(res.code==0){
                             this.$message.success('编辑成功')
-                            this.$router.push('/admin/system')
+                            setTimeout(() => {
+                                this.$router.push('/admin/system')
+                            },1000) 
                             return false
                         }else{
                             this.$message.error(res.msg);
@@ -139,7 +141,9 @@ export default {
                         console.log(res)
                         if(res.code==0){
                             this.$message.success('提交成功')
-                            this.$router.push('/admin/system')
+                             setTimeout(() => {
+                                this.$router.push('/admin/system')
+                            },1000) 
                             return false
                         }else{
                             this.$message.error(res.msg);

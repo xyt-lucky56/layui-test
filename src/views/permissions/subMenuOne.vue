@@ -215,7 +215,9 @@ export default {
                     editGroupinfo(params).then(res=>{
                         if(res.code==0){
                             this.$message.success('修改成功')
-                            this.$router.push('/admin/permissions')
+                            setTimeout(() => {
+                                this.$router.push('/admin/permissions')
+                            },1000) 
                             return false
                         }else{
                             this.$message.error(res.msg);
@@ -225,7 +227,9 @@ export default {
                     addGroupinfos(params).then(res=>{
                         if(res.code==0){
                             this.$message.success('提交成功')
-                            this.$router.push('/admin/permissions')
+                            setTimeout(() => {
+                                this.$router.push('/admin/permissions')
+                            },1000) 
                             return false
                         }else{
                             this.$message.error(res.msg);
