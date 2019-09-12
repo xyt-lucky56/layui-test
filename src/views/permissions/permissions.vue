@@ -29,7 +29,7 @@
                             <div class="layui-form-item layui-inline">
                                 <div class="layui-input-block">
                                     <div class="layui-btn" @click="search">搜索</div>
-                                    <div type="reset" class="layui-btn layui-btn-primary">重置</div>
+                                    <div type="reset" class="layui-btn layui-btn-primary" @click="reset">重置</div>
                                 </div>
                             </div>
                         </div>
@@ -91,7 +91,8 @@ export default {
             limits:[5,7,10],
             showChildTable: false,
             systemname:'',
-            searchInp:''
+            searchInp:'',
+            menuId:''
         }
     },
     created() {
@@ -146,7 +147,8 @@ export default {
                     
                     console.log(treedata);
                     this.treedata = treedata;
-                    this.reloadData(val);                         
+                    this.reloadData(val); 
+
                 }else{
                     this.$message.warning(res.msg);
                 }
@@ -167,7 +169,7 @@ export default {
                 layui.form.on('select(myselect)', (data) => {
                     console.log(data.value);
                     this.getTreedata(data.value);
-                    
+                    this.systemname=data.value
                 })
                 
             });
@@ -207,6 +209,7 @@ export default {
 
                     console.log(obj.data); //得到当前点击的节点数据
                     let data = obj.data;
+                    this.menuId=data.id
                     if(data.children){
                         this.showChildTable = false;
                         let param = { systemname: val }
@@ -284,10 +287,45 @@ export default {
             }            
         },
         search(){  
-            this.table.reload('test1', {
-                url: 'api/api-a-bkf-/user-mucon/system/queryGroupinfo'
-                ,where: {systemname: this.searchInp} //设定异步数据接口的额外参数
-            });
+            if(this.showChildTable){
+                this.table.reload('test1', {
+                    url: '/api/api-a-bkf-/user-mucon/system/queryPowerinfo'
+                    ,where: {
+                        groupId:this.menuId,
+                        searchName:this.searchInp
+                    } //设定异步数据接口的额外参数
+                    ,cols: this.cols2
+                });
+            }else{
+                this.table.reload('test1', {
+                    url: 'api/api-a-bkf-/user-mucon/system/queryGroupinfo'
+                    ,where: {
+                        systemname:this.systemname,
+                        searchName: this.searchInp
+                    } //设定异步数据接口的额外参数
+                });
+            }
+        },
+        reset(){
+            this.searchInp=''
+            if(this.showChildTable){
+                 this.table.reload('test1', {
+                    url: '/api/api-a-bkf-/user-mucon/system/queryPowerinfo'
+                    ,where: {
+                        groupId:this.menuId,
+                        searchName:this.searchInp
+                    } //设定异步数据接口的额外参数
+                    ,cols: this.cols2
+                });
+            }else{
+                this.table.reload('test1', {
+                    url: 'api/api-a-bkf-/user-mucon/system/queryGroupinfo'
+                    ,where: {
+                        systemname:this.systemname,
+                        searchName: this.searchInp
+                    } //设定异步数据接口的额外参数
+                });
+            }
         }
     }
 }
