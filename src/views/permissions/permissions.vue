@@ -322,7 +322,7 @@ export default {
                     } //设定异步数据接口的额外参数
                     ,cols: this.cols2
                 });
-            }else{
+            }else if(this.systemname){
                 this.table.reload('test1', {
                     url: 'api/api-a-bkf-/user-mucon/system/queryGroupinfo'
                     ,where: {
