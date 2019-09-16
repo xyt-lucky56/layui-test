@@ -270,10 +270,10 @@ export default {
       localStorage.setItem('currIndex', this.currIndex)
     },
     save() {
-      this.setCookie('accessToken', 'accessToken');
-      this.setCookie('useId', 'useId');
-      this.setCookie('useType', 'useType');
-      this.setCookie('clientType', 'clientType');
+      this.setCookie('accessToken', '123456789');
+      this.setCookie('useId', '10001');
+      this.setCookie('useType', '01');
+      this.setCookie('clientType', 'BS');
     },
      // 存 cookie
     setCookie(c_name, value) {
