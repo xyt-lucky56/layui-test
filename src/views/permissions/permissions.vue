@@ -50,7 +50,7 @@
 import { filterData,isexpands } from '@/filter/groupList'
 import FengunionTable from '@/utils/comTable'//表格封装
 import { sysnameList, filterViewType } from "@/filter/groupList"
-import { querySysnameList, queryGroupinfo, permissionsMenu, deleteGroupinfo } from "@/api/api"
+import { path,querySysnameList, queryGroupinfo, permissionsMenu, deleteGroupinfo } from "@/api/api"
 export default {
     data() {
         return {
@@ -216,7 +216,7 @@ export default {
                         this.showChildTable = false;
                         let param = { systemname: val, searchName: '' }
                         this.table.reload('test1', {
-                            url: '/apis/api-a-bkf-/user-mucon/system/queryGroupinfo'
+                            url: path+'/system/queryGroupinfo'
                             ,where: param //设定异步数据接口的额外参数
                             ,cols: this.cols
                         });
@@ -227,7 +227,7 @@ export default {
                             searchName: ''
                         }
                         this.table.reload('test1', {
-                            url: '/apis/api-a-bkf-/user-mucon/system/queryPowerinfo'
+                            url: path+'/system/queryPowerinfo'
                             ,where: params //设定异步数据接口的额外参数
                             ,cols: this.cols2
                         });
@@ -238,7 +238,7 @@ export default {
            
             let param = { systemname: val, searchName: '' }
             this.table.reload('test1', {
-                url: '/apis/api-a-bkf-/user-mucon/system/queryGroupinfo'
+                url: path+'/system/queryGroupinfo'
                 ,where: param //设定异步数据接口的额外参数
                 ,cols: this.cols
             });
@@ -259,7 +259,7 @@ export default {
                             if(res.code==0){
                                 this.$message.success('删除成功')
                                 this.table.reload('test1', {
-                                    url: '/apis/api-a-bkf-/user-mucon/system/queryGroupinfo'
+                                    url: path+'/system/queryGroupinfo'
                                     ,where: {systemname: this.systemname} //设定异步数据接口的额外参数
                                 });
                                 layer.close(index);
@@ -293,7 +293,7 @@ export default {
             if(this.searchInp && this.treedata.length){
                 if(this.showChildTable){
                     this.table.reload('test1', {
-                        url: '/apis/api-a-bkf-/user-mucon/system/queryPowerinfo'
+                        url: path+'/system/queryPowerinfo'
                         ,where: {
                             groupId:this.menuId,
                             searchName:this.searchInp
@@ -302,7 +302,7 @@ export default {
                     });
                 }else{
                     this.table.reload('test1', {
-                        url: '/apis/api-a-bkf-/user-mucon/system/queryGroupinfo'
+                        url: path+'/system/queryGroupinfo'
                         ,where: {
                             systemname:this.systemname,
                             searchName: this.searchInp
@@ -315,7 +315,7 @@ export default {
             this.searchInp=''
             if(this.showChildTable){
                  this.table.reload('test1', {
-                    url: '/apis/api-a-bkf-/user-mucon/system/queryPowerinfo'
+                    url: path+'/system/queryPowerinfo'
                     ,where: {
                         groupId:this.menuId,
                         searchName:this.searchInp
@@ -324,7 +324,7 @@ export default {
                 });
             }else if(this.systemname){
                 this.table.reload('test1', {
-                    url: '/apis/api-a-bkf-/user-mucon/system/queryGroupinfo'
+                    url: path+'/system/queryGroupinfo'
                     ,where: {
                         systemname:this.systemname,
                         searchName: this.searchInp

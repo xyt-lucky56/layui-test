@@ -22,7 +22,7 @@
 <script>
 import { filterData } from '@/filter/groupList'
 import FengunionTable from '@/utils/comTable'//表格封装
-import { delSubsystem } from '@/api/api'
+import { path,delSubsystem } from '@/api/api'
 export default {
     data(){
         return{
@@ -62,7 +62,7 @@ export default {
         }
     },
     mounted(){
-        FengunionTable('test', 'apis/api-a-bkf-/user-mucon/system/querySystemInfo', this.cols, {}, true,this.limit,'post',function(e){
+        FengunionTable('test', path+'/system/querySystemInfo', this.cols, {}, true,this.limit,'post',function(e){
             console.log(e)
         })
         layui.use(['table'], ()=>{
@@ -90,7 +90,7 @@ export default {
                             console.log(res)
                             if(res.code==0){
                                 table.reload('test', {
-                                    url: 'apis/api-a-bkf-/user-mucon/system/querySystemInfo'
+                                    url: path+'/system/querySystemInfo'
                                 });
                                 layer.close(index);
                             }else{

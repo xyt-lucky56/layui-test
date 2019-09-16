@@ -20,7 +20,7 @@
 <script>
 import FengunionTable from '@/utils/comTable'  //表格封装
 import { filterSysName } from "@/filter/groupList"
-import { QUERYROLELIST, roleDelete } from '@/api/api'
+import { path,QUERYROLELIST, roleDelete } from '@/api/api'
 export default {
     data(){
         return{
@@ -37,7 +37,7 @@ export default {
         }
     },
     mounted(){
-        let url = 'apis/api-a-bkf-/user-mucon' + QUERYROLELIST;
+        let url = path + QUERYROLELIST;
         // console.log(url)
         FengunionTable('tableRole', url, this.cols, {}, true,this.limit, 'post', function(e) {//表格初始化
             // console.log(e)
@@ -62,7 +62,7 @@ export default {
                         roleDelete(params).then(res=>{
                             console.log(res)
                             if(res.code==0){
-                                let url = 'apis/api-a-bkf-/user-mucon' + QUERYROLELIST
+                                let url = path + QUERYROLELIST
                                 table.reload('tableRole', {
                                     url: url
                                 });
