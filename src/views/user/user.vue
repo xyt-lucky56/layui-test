@@ -46,12 +46,13 @@ export default {
                 {field:'status', title: '操作',toolbar: '#barDemo',width:200,fixed: 'right'},
             ]],
             tree:'',
+            limit:5,
         }
     },
     mounted(){
-        FengunionTable('test1', '/api/user/tableList', this.cols, {}, true).then(e => {//表格初始化
-            // console.log(e)
-        })    
+        FengunionTable('test1', '/api/user/tableList', this.cols, {}, true,this.limit,'post',function(e){
+            console.log(e)
+        })
         layui.use(['tree','table'], ()=>{
             var tree = layui.tree
             ,table=layui.table
