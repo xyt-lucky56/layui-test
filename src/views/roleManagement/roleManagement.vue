@@ -37,7 +37,7 @@ export default {
         }
     },
     mounted(){
-        let url = 'api/api-a-bkf-/user-mucon' + QUERYROLELIST;
+        let url = 'apis/api-a-bkf-/user-mucon' + QUERYROLELIST;
         // console.log(url)
         FengunionTable('tableRole', url, this.cols, {}, true,this.limit, 'post', function(e) {//表格初始化
             // console.log(e)
@@ -62,7 +62,7 @@ export default {
                         roleDelete(params).then(res=>{
                             console.log(res)
                             if(res.code==0){
-                                let url = 'api/api-a-bkf-/user-mucon' + QUERYROLELIST
+                                let url = 'apis/api-a-bkf-/user-mucon' + QUERYROLELIST
                                 table.reload('tableRole', {
                                     url: url
                                 });
