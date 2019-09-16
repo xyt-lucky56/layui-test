@@ -62,7 +62,7 @@ export default {
         }
     },
     mounted(){
-        FengunionTable('test', 'api/api-a-bkf-/user-mucon/system/querySystemInfo', this.cols, {}, true,this.limit,'post',function(e){
+        FengunionTable('test', 'apis/api-a-bkf-/user-mucon/system/querySystemInfo', this.cols, {}, true,this.limit,'post',function(e){
             console.log(e)
         })
         layui.use(['table'], ()=>{
@@ -90,7 +90,7 @@ export default {
                             console.log(res)
                             if(res.code==0){
                                 table.reload('test', {
-                                    url: 'api/api-a-bkf-/user-mucon/system/querySystemInfo'
+                                    url: 'apis/api-a-bkf-/user-mucon/system/querySystemInfo'
                                 });
                                 layer.close(index);
                             }else{
