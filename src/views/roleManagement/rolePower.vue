@@ -19,6 +19,7 @@ export default {
   data() {
     return {
       id: '',
+      systemname: '',
       formData: [],
       roleList: [],
       tree: null,
@@ -27,6 +28,7 @@ export default {
   created() {
     if(this.$route.params.id){
       this.id = this.$route.params.id;
+      this.systemname = this.$route.params.systemname;
       this.getPowers();
     }
   },
@@ -34,7 +36,8 @@ export default {
     // 获取权限
     getPowers(){
       let parmas = {
-        id: this.id
+        id: this.id,
+        systemname: this.systemname
       }
       queryRolePermissions(parmas).then(res => {
         if(res.code === 0){                            

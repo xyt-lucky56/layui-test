@@ -73,7 +73,7 @@ export default {
                 } else if (obj.event === 'edit') { 
                     this.$router.push({name: 'subrole', params: { type: 'edit', data }});
                 } else if(obj.event === 'assign') {
-                    this.$router.push({ name: 'rolePower', params: { id: data.id } })
+                    this.$router.push({ name: 'rolePower', params: { id: data.id, systemname: data.systemname } })
                 }
             });
         },
