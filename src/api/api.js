@@ -1,5 +1,6 @@
 import https from '@/utils/axios'  //引入我们二次封装的axios.js文件 
-export const path = '/api/api-a-bkf-/user-mucon'
+var url = process.env.NODE_ENV == 'development'?'/api':'/apis'
+export const path = url + '/api-a-bkf-/user-mucon'
 
 /*---------系统管理------------ */
 export const QUERYSYSTEMINFO = '/system/querySystemInfo'
