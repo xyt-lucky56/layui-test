@@ -2,7 +2,7 @@ import axios from 'axios'
 import Qs from 'qs'
 
 axios.defaults.withCredentials = false;  //false  不跨域  true 跨域
-axios.defaults.baseURL = process.env.NODE_ENV == 'development'?'/apis':'/apis'
+axios.defaults.baseURL = process.env.NODE_ENV == 'development'?'/api':'/apis'
 // axios.defaults.headers.common['token'] = localstorage.getItem('token'); //设置请求头，这个是不是必须的
 
 export default function (url, params, method = 'get', type='json') {
