@@ -117,7 +117,7 @@ export default {
                     }, 100)
                                        
                 }else{
-                    this.$message.warning(res.msg);
+                    this.$message.warning('获取数据失败');
                 }
             })
         },
