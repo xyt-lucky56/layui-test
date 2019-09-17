@@ -27,7 +27,7 @@ export default {
     data(){
         return{
             cols:[[
-                {field:'id', title: 'ID',width:80,sort: true,fixed: 'left'},
+                {field:'id', title: 'ID',width:150,sort: true,fixed: 'left'},
                 {field:'systemname', title: '系统名称',width:150,fixed: 'left',templet:function(res){
                     return filterData(res.systemname)
                 }},
@@ -63,7 +63,7 @@ export default {
     },
     mounted(){
         FengunionTable('test', path+'/system/querySystemInfo', this.cols, {}, true,this.limit,'post',function(e){
-            console.log(e)
+            // console.log(e)
         })
         layui.use(['table'], ()=>{
             var table=layui.table
