@@ -66,7 +66,9 @@ export default {
                                 table.reload('tableRole', {
                                     url: url
                                 });
-                               
+                               this.$message.success('删除成功');
+                            }else {
+                                this.$message.success('删除失败');
                             }
                         })
                     })

@@ -82,20 +82,21 @@ export default {
                 if(obj.event === 'detail'){//查看
                     this.$router.push({name:'subsystem',params:{data}});
                 }else if(obj.event === 'del'){
-                    layer.confirm('真的删除么', function(index){
+                    layer.confirm('真的删除么', (index)=>{
                         let params={
                             id:data.id
                         }
                         delSubsystem(params).then(res=>{
-                            console.log(res)
+                            // console.log(res)
                             if(res.code==0){
                                 table.reload('test', {
                                     url: path+'/system/querySystemInfo'
                                 });
                                 layer.close(index);
+                                this.$message.success('删除成功');
                             }else{
                                 layer.close(index);
-                                this.$message.error(res.msg);
+                                this.$message.error('删除失败!');
                             }
                             // obj.del();
                         })

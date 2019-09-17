@@ -117,7 +117,7 @@ export default {
                     }, 100)
                                        
                 }else{
-                    this.$message.warning(res.msg);
+                    this.$message.warning('获取数据失败');
                 }
             })
         },
@@ -262,6 +262,7 @@ export default {
                                     url: path+'/system/queryGroupinfo'
                                     ,where: {systemname: this.systemname} //设定异步数据接口的额外参数
                                 });
+                                this.$message.success('删除成功');
                                 layer.close(index);
                             }else{
                                 layer.close(index);
