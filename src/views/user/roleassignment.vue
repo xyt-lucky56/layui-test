@@ -14,48 +14,103 @@
     </div>
 </template>
 <script>
+import { getRolesOfSystem, assignRole } from '@/api/api'
 export default {
     data(){
         return{
-            data:[                
-                {title: '超级管理员',id: 100,children:[
-                    {title:'管理员',id: 1001},
-                    {title:'平台负责人',id: 1002}
-                ]},
-                {title:'司机',id: 101},
-                {title:'供应商',id: 102},
-                {title:'普通用户',id: 103},
-            ],
-            info:{}
+            treeData:[],
+            roleList: [],
+            info: {},
+            userId: '',
+            systemname: '',
+            tree: null,
+
         }
     },
-    mounted(){
-        layui.use(['tree','jquery'], ()=>{
-            var tree = layui.tree,
-            $=layui.jquery
-            tree.render({
-                elem: '#test2',
-                data:this.data,
-                showLine: false,  //是否开启连接线
-                accordion: true,//手风琴模式                
-                click: (obj)=>{
-                    // console.log(obj)
-                    if(!obj.data.children){
-                        this.info={}
-                        this.info = obj.data;  //获取当前点击的节点数据   
-                        $('div.layui-tree-set').each(function(){
-                            $(this).removeClass('tree-active')
-                        })
-                        obj.elem.addClass('tree-active')
-                    }
-                }
-            }) 
-        })
+    created() {
+        // console.log(this.$route.params);
+        if(this.$route.params.id){
+            this.userId = this.$route.params.id;
+            this.systemname = this.$route.params.systemname;
+            this.getRoles();
+        }
     },
+    // mounted(){
+    //     this.showtree();
+    // },
     methods:{
+        // 查询所有角色列表
+        getRoles() {
+            let parmas = {
+                userId: this.userId,
+                systemname: this.systemname
+            }
+            getRolesOfSystem(parmas).then(res => {
+                if(res.code === 0){                            
+                    var list = res.data.list;
+                    var treeData = [];
+                    for(let i = 0; i < list.length; i++){
+                        let menuone = list[i];
+                        let obj1 = {};
+                        obj1.id = menuone.id;
+                        obj1.title = menuone.rolename;
+                        treeData.push(obj1);
+                    }
+                    this.treeData = treeData;
+
+                    if(res.data.roleList.length){
+                        var list1 = res.data.roleList, roleList=[];
+                        for(let i = 0; i < list1.length; i++){
+                            let menuone = list1[i];
+                            roleList.push(menuone.id);
+                        }
+                        console.log(roleList);
+                        this.roleList = roleList;
+                    }
+                    
+                    this.showtree();
+                }else{
+                    this.$message.warning(res.msg);
+                }
+            })
+        },
         submit(){
-            layer.msg(JSON.stringify(this.info))
-            console.log(this.info)
+            var checkData = this.tree.getChecked('demoId1');
+            var list = [];
+            for(let i = 0; i < checkData.length; i++){
+                let menuone = checkData[i];              
+                list.push(menuone.id); 
+            }
+            let params = {
+                userId: this.userId,
+                roles: list
+            }
+            console.log(params);
+            assignRole(params).then(res => {
+                if(res.code === 0){
+                    this.$message.success('角色分配成功')       
+                    setTimeout(() => {
+                        this.$router.push({name: 'user'});
+                    },1000)          
+                }else{
+                    this.$message.warning(res.msg);
+                }
+            })
+        },
+        // 渲染树形组件
+        showtree(){
+            layui.use(['tree','jquery'], ()=>{
+                var tree = layui.tree;
+                this.tree = layui.tree;
+                tree.render({
+                    elem: '#test2',
+                    id: 'demoId1',
+                    data: this.treeData,
+                    showCheckbox: true              
+                })
+
+                tree.setChecked('demoId1', this.roleList); 
+            })
         },
         cancel(){
             this.$router.back(-1);

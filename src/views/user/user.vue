@@ -19,72 +19,69 @@
     </div>
 </template>
 <script>
+import { filterUserType } from "@/filter/groupList"
 import FengunionTable from '@/utils/comTable'//表格封装
+import { path, getDeptList, deleteUser } from '@/api/api'
 export default {
     data(){
         return{
-            data:[
-                {title: '部门',id:1,spread:true,children:[
-                    {title: '平台事业部',id:11},
-                    {title: '研发部',id:12},
-                    {title: '财务部',id:13},
-                    {title: '人事部',id:14},
-                ]}
-            ],            
+            depList:[],            
             cols:[[
-                {field:'id', title: 'ID',width:80,sort: true,fixed: 'left'},
+                {field:'id', title: 'ID',width:80,fixed: 'left'},
                 {field:'username', title: '用户名',fixed: 'left'},
-                {field:'deptId', title: '所属部门'},
-                {field:'name', title: '姓名'},
+                {field:'deptName', title: '所属部门'},
+                {field:'systemname', title: '系统名称'},
+                {field:'username', title: '姓名'},
                 {field:'mobile', title: '手机号'},
                 {field:'tel', title: '联系电话'},
                 {field:'email', title: '电子邮箱'},
-                {field:'postCode', title: '邮政编码'},
-                {field:'userType', title: '用户类型'},
+                {field:'postcode', title: '邮政编码'},
+                {field:'usertype', title: '用户类型', templet: function (res) {
+                    return filterUserType(res.usertype)
+                }},
                 {field:'address', title: '地址'},
-                {field:'createTime', title: '创建时间',width:200},
+                {field:'createtime', title: '创建时间',width:200},
                 {field:'status', title: '操作',toolbar: '#barDemo',width:200,fixed: 'right'},
             ]],
             tree:'',
-            limit:5,
+            limit: 10,
+            deptId: "0"
         }
     },
+    created() {
+        this.getDepts()
+    },
     mounted(){
-        FengunionTable('test1', '/api/user/tableList', this.cols, {}, true,this.limit,'post',function(e){
-            console.log(e)
-        })
-        layui.use(['tree','table'], ()=>{
-            var tree = layui.tree
-            ,table=layui.table
-            this.tree=tree
-            tree.render({
-                elem: '#test',
-                data:this.data,
-                accordion: true,//手风琴模式                
-                click: function(obj){
-                    let data = obj.data;  //获取当前点击的节点数据
-                    console.log(data)                    
-                    if(data.title=='平台事业部'){
-                        table.reload('test1', {
-                            url: '/api/user/tableInfo'
-                            ,where: {} //设定异步数据接口的额外参数
-                            //,height: 300
-                        });
-                    }else if(data.title=='研发部'){
-                        table.reload('test1', {
-                            url: '/api/user/userInfo'
-                        });
-                    }else if(data.title=='部门'){
-                        table.reload('test1', {
-                            url: '/api/user/tableList'
-                        });
-                    }
-                }
-            })            
-            this.statusChange(table)
-        })
+        
     },
     methods:{
+        // 获取所有部门
+        getDepts() {
+            getDeptList().then(res => {
+                var treedata = [];
+                if(res.data.length>=1){
+                    var obj1 = {}, list = res.data;
+                    obj1.id = "0";
+                    obj1.title = "部门";
+                    obj1.children = []; 
+                    if(list.length){
+                        for(let a = 0; a < list.length; a++){
+                            let menutwo = list[a];
+                            let obj2 = {};
+                            obj2.id = menutwo.id;
+                            obj2.title = menutwo.deptName;
+                            obj1.children.push(obj2);
+                        } 
+                    }
+                    treedata.push(obj1);
+                }
+                this.depList = treedata;
+                this.deptId = "0";
+                setTimeout(() => {
+                    this.showtree();
+                }, 100)
+            })
+        },
         add(){
              this.$router.push('/admin/adduser');
         },
@@ -96,12 +93,73 @@ export default {
                     this.$router.push({name:'adduser',params:{data}});
                 }else if(obj.event === 'del'){
                     layer.confirm('真的删除行么', function(index){
-                        obj.del();
+                        let params={
+                            id:data.id,
+                        }
+                        deleteUser(params).then(res=>{
+                            if(res.code==0){
+                                this.$message.success('删除成功')
+                                var url = path+'/system/findAllUser'
+                                var params = {};
+                                if(this.deptId !== "0"){
+                                    url = path+'/system/findUserByDept';
+                                    params = { deptId: this.deptId };
+                                }
+                                
+                                this.table.reload('test1', {
+                                    url: url
+                                    ,where: params //设定异步数据接口的额外参数
+                                });
+                                this.$message.success('删除成功');
+                                layer.close(index);
+                            }else{
+                                layer.close(index);
+                                this.$message.error(res.msg);
+                            }
+                        })
+                        // obj.del();
                         layer.close(index);
                     });
                 }else if(obj.event === 'jump'){
-                    this.$router.push('/admin/roleassignment')                   
+                    console.log(data);
+                    this.$router.push({ name: 'roleassignment', params: { id: data.id, systemname: data.systemname }})                   
                 }
+            })
+        },
+        showtree() {
+            FengunionTable('test1', path + '/system/findAllUser', this.cols, {}, true,this.limit,'post',function(e){
+                // console.log(e)
+            })
+            
+            layui.use(['tree','table'], ()=>{
+                var tree = layui.tree
+                ,table=layui.table
+                this.tree=tree
+                tree.render({
+                    elem: '#test',
+                    data: this.depList,
+                    accordion: true,//手风琴模式                
+                    click: function(obj){
+                        $('div.layui-tree-set').each(function() {
+                            $(this).removeClass("bgdetail");
+                        })  
+                        if(!obj.data.children){  
+                            obj.elem.addClass("bgdetail");
+                        }
+
+                        let data = obj.data;  //获取当前点击的节点数据
+                        console.log(data);
+                        this.deptId = data.id;
+                        if(data.id !== "0"){
+                            let params = { deptId: data.id};
+                            table.reload('test1', {
+                                url: path+'/system/findUserByDept'
+                                ,where: params 
+                            });
+                        }                    
+                    }
+                })            
+                this.statusChange(table)
             })
         }
     }

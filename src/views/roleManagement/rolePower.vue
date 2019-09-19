@@ -85,7 +85,7 @@ export default {
     },
 
     // //渲染树形组件
-    showTree(tree) {
+    showTree() {
       layui.use('tree', () => {
         var tree = layui.tree;
         this.tree = layui.tree;
@@ -112,6 +112,8 @@ export default {
             let menutwo = menuone.children[a];
             list.push(menutwo.id);
           } 
+        }else{
+          list.push(menuone.id);     
         }
       }
       console.log(list);

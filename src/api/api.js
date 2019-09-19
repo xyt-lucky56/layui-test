@@ -148,3 +148,48 @@ const DELPOWERINFO='/system/deletePowerinfos'
 export const deletePowerinfos = function(params){
     return https(DELPOWERINFO, params, 'post','form');
 }
+
+
+/**---------用户管理--------- */
+
+// 查询所有部门
+const GETDEPTINFO = '/system/findDeptInfo'
+export const getDeptList = function(params){
+    return https(GETDEPTINFO, params, 'post', 'form');
+}
+
+// 删除用户
+const DELETEUSER = '/system/deleteUser'
+export const deleteUser = function(params){
+    return https(DELETEUSER, params, 'post', 'form');
+}
+
+// 添加用户
+const ADDUSER = '/system/addUser'
+export const addUser = function(params){
+    return https(ADDUSER, params, 'post');
+}
+
+// 编辑用户
+const EDITUSERINFO = '/system/updateUser'
+export const editUserinfo = function(params){
+    return https(EDITUSERINFO, params, 'post');
+}
+
+// 查询用户名或手机号是否已存在
+const CHEACKUSERNAME = '/system/findByUsernameAndMobile'
+export const cheackUsername = function(params){
+    return https(CHEACKUSERNAME, params, 'post', 'form');
+}
+
+// 查询所有角色
+const QUERYROLEBYSYSTEM = '/system/searchRoleByIdAndSystem'
+export const getRolesOfSystem = function(params){
+    return https(QUERYROLEBYSYSTEM, params, 'post', 'form');
+}
+
+// 角色分配
+const ASSIGNROLE = '/system/allocateRole'
+export const assignRole = function(params){
+    return https(ASSIGNROLE, params, 'post');
+}

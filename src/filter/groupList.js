@@ -13,27 +13,30 @@ export const roomList = [{
     label: 4
 }]
 
-// 系统名称
-export const sysnameList = [
-    { val: "operational", label: "运营平台" },
-    { val: "order", label: "订单管理系统" },
-    { val: "finance", label: "财务管理系统" },
-    { val: "stock ", label: "库存管理系统" }
+// 用户类型
+export const userTypeList = [
+    { val: "01", label: "运营平台人员" },
+    { val: "02", label: "企业" },
+    { val: "03", label: "个人" },
+    { val: "04 ", label: "供应商" },
+    { val: "05", label: "司机" },
 ]
-
-export const filterSysName = function(){
-    $("[data-field = 'systemname']").children().each(function(){
-        var val = $(this).text();
-        if(val === 'operational'){                          
-            $(this).text("运营平台");
-        }else if(val === 'order'){           
-            $(this).text("订单管理系统");
-        }else if(val === 'finance'){           
-            $(this).text("财务管理系统");
-        }else if(val === 'stock'){
-            $(this).text("库存管理系统");           
-        }        
-    })
+export const filterUserType = function(value){
+    if(value&&value!=null){
+        if(value == "01"){
+            return "运营平台人员"
+        }else if(value == "02"){
+            return "企业"
+        }else if(value == "03"){
+            return "个人"
+        }else if(value == "04"){
+            return "供应商"
+        }else if(value == "05"){
+            return "司机"
+        }
+    }else{
+        return '--'
+    }
 }
 
 // 界面类型

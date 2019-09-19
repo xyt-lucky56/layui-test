@@ -35,7 +35,7 @@
                     <div class="layui-inline">
                         <label class="layui-form-label">英文名 :</label>
                         <div class="layui-input-inline">
-                            <input type="text" name="englishName" placeholder="请输入姓名" lay-verify="required|englishName" lay-verType='tips' autocomplete="off" class="layui-input">
+                            <input type="text" name="englishname" placeholder="请输入姓名" lay-verify="required|englishName" lay-verType='tips' autocomplete="off" class="layui-input">
                         </div>
                     </div>
                     <div class="layui-inline">
@@ -55,7 +55,7 @@
                     <div class="layui-inline">
                         <label class="layui-form-label">邮政编码 :</label>
                         <div class="layui-input-inline">
-                            <input type="text" name="postCode" placeholder="邮政编码" lay-verify="required|postCode" lay-verType='tips' autocomplete="off" class="layui-input">
+                            <input type="text" name="postcode" placeholder="邮政编码" lay-verify="required|postCode" lay-verType='tips' autocomplete="off" class="layui-input">
                         </div>
                     </div>
                 </div>
@@ -69,9 +69,9 @@
                     <div class="layui-inline">
                         <label class="layui-form-label">用户类型 :</label>
                         <div class="layui-input-inline">
-                            <select name="userType" lay-verify="required">
+                            <select name="usertype" lay-verify="required|usertype">
                                 <option value="">请选择用户类型</option>
-                                <option v-for="(item,index) in userTypes" :key='index' :value="item.type">{{item.type}}</option>
+                                <option v-for="(item,index) in userTypeList" :key='index' :value="item.val">{{item.label}}</option>
                             </select>
                         </div>
                     </div>
@@ -80,16 +80,35 @@
                     <div class="layui-inline">
                         <label class="layui-form-label">所属部门 :</label>
                         <div class="layui-input-inline">
-                            <select name="deptId" lay-verify="required">
+                            <select name="deptid" lay-verify="required">
                                 <option value="">请选择所属部门</option>
-                                <option v-for="(item,index) in departments" :key='index' :value="item.title">{{item.title}}</option>
+                                <option v-for="(item,index) in depList" :key='index' :value="item.val">{{item.label}}</option>
+                            </select>
+                        </div>
+                        
+                    </div>
+                    <div class="layui-inline">
+                        <label class="layui-form-label">系统名称 :</label>
+                        <div class="layui-input-inline"> 
+                            <select name="systemname" lay-verify="required|systemName">
+                                <option value="">请选择系统名称</option>
+                                <option v-for="(item,index) in systemnameList" :key='index' :value="item.systemname">{{item.systemname}}</option>
                             </select>
                         </div>
                     </div>
+
+                </div>
+                <div class="layui-form-item">
                     <div class="layui-inline">
                         <label class="layui-form-label">备注 :</label>
                         <div class="layui-input-inline">
                             <textarea name='remark' placeholder="请输入内容" class="layui-textarea"></textarea>
+                        </div>
+                    </div>
+                    <div class="layui-inline">
+                       <label class="layui-form-label"></label>
+                        <div class="layui-input-inline">
+                            <!-- <textarea name='remark' placeholder="请输入内容" class="layui-textarea"></textarea> -->
                         </div>
                     </div>
                 </div>
@@ -106,30 +125,33 @@
     </div>
 </template>
 <script>
+import { userTypeList } from "@/filter/groupList"
+import { querySysnameList, getDeptList, addUser, editUserinfo, cheackUsername } from '@/api/api'
 export default {
     data(){
         return{
             title:'添加用户',
-            userTypes:[
-                {type:'运营人员'},
-                {type:'司机'},
-                {type:'供应商'},
-            ],
+            userTypeList: userTypeList,
+            depList:[],
             departments:[
                 {title:'平台事业部'},
                 {title:'研发部'},
                 {title:'财务部'},
                 {title:'人事部'},
             ],
+            systemnameList:[],//系统名称
             info:{}
         }
     },
     created(){
+        this.getSystem();
+        this.getDepts();
         if(JSON.stringify(this.$route.params)!='{}'){
             this.info=this.$route.params.data
             console.log(this.info)
             this.title="用户编辑"
         }
+
     },
     mounted(){
         layui.use(['form'], ()=>{
@@ -138,31 +160,159 @@ export default {
             //表单初始赋值
             form.val('example', {
                 'username':this.info.username,
+                'qq': this.info.qq,
                 'name':this.info.name,
+                'englishname': this.info.englishname,
                 'email':this.info.email,
                 'address':this.info.address,
                 'mobile':this.info.mobile,
-                'postCode':this.info.postCode,
+                'postcode':this.info.postcode,
                 'tel':this.info.tel,
-                'userType':this.info.userType,
-                'deptId':this.info.deptId,
+                'usertype':this.info.usertype,
+                'deptid': this.info.deptid, 
+                'systemName': this.info.systemName, 
+                'remark': this.info.remark
             })
             this.formSubmit(form)
             this.checkForm(form)
         })
     },
+    updated() {
+        this.showForm();
+    },
     methods:{
+        getSystem(){//获取系统名称
+            querySysnameList().then(res=>{
+                if(res.code==0){
+                    this.systemnameList=res.data
+                }
+            })
+        },
+        // 获取所有部门
+        getDepts() {
+            getDeptList().then(res => {
+                var treedata = [];
+                if(res.data.length>=1){
+                    var list = res.data;
+                    for(let a = 0; a < list.length; a++){
+                        let menutwo = list[a];
+                        let obj2 = {};
+                        obj2.val = menutwo.id;
+                        obj2.label = menutwo.deptName;
+                        treedata.push(obj2);
+                    } 
+                }
+                this.depList = treedata;
+                setTimeout(() => {
+                    this.showForm();
+                },100)
+                
+            })
+        },
+        
         formSubmit(form){
             //监听提交
             form.on('submit(demo1)', (data)=>{
                 console.log(data.field)
-                // this.$message.success('提交成功')
-                // this.$router.push('/user')
+                let dataon = data.field;                
+                if(this.info.id){
+                    
+                    let params = {
+                        id: this.info.id,
+                        deptid: dataon.deptid,  //部门Id
+                        username: dataon.username,         //用户名
+                        // password: dataon.password,            //密码
+                        name: dataon.name,                       //姓名
+                        englishname: dataon.englishname,        //英文名字
+                        // portrait: "",                          //头像地址
+                        mobile: dataon.mobile,     //手机
+                        tel: dataon.tel,                                   //电话
+                        qq: dataon.qq,                //QQ
+                        email: dataon.email,     //电子邮箱
+                        address: dataon.address,                  //地址
+                        postcode: dataon.postcode,                //邮编
+                        usertype: dataon.usertype,                        //用户类型
+                        systemname: dataon.systemname,
+                        remark: dataon.remark                            //
+                    }               
+                    editUserinfo(params).then(res => {
+                        if(res.code === 0){                            
+                            this.$message.success('用户编辑成功');
+                            setTimeout(() => {
+                                this.$router.push({name: 'user'});
+                            },1000)                            
+                        }else{
+                            this.$message.warning(res.msg);
+                        }
+                    })
+                }else {   // 添加用户
+                    // 校验用户名
+                    let cheackData = {
+                        username: dataon.username
+                    }
+                    cheackUsername(cheackData).then(res => {
+                        if(res.code === 0){
+                            if(res.count === 0){
+
+                                // 校验手机号
+                                let cheackData2 = {
+                                    mobile: dataon.mobile
+                                }
+                                cheackUsername(cheackData2).then(res => {
+                                    if(res.code === 0){
+                                        if(res.count === 0){
+                                            let params = {
+                                                deptid: dataon.deptid,  //部门Id
+                                                username: dataon.username,         //用户名
+                                                name: dataon.name,                       //姓名
+                                                englishname: dataon.englishname,        //英文名字 
+                                                mobile: dataon.mobile,     //手机
+                                                tel: dataon.tel,                                   //电话
+                                                qq: dataon.qq,                //QQ
+                                                email: dataon.email,     //电子邮箱
+                                                address: dataon.address,                  //地址
+                                                postcode: dataon.postcode,                //邮编
+                                                usertype: dataon.usertype,                        //用户类型
+                                                systemname: dataon.systemname,
+                                                remark: dataon.remark                             //
+                                            }
+                                            addUser(params).then(res => {
+                                                if(res.code === 0){                           
+                                                    this.$message.success('用户添加成功');
+                                                    setTimeout(() => {
+                                                        this.$router.push({name: 'user'});
+                                                    },1000)
+                                                }else{
+                                                    this.$message.warning(res.msg);
+                                                }
+                                            })
+                                        }else if (res.count > 0){
+                                            this.$message.warning('该手机号已注册')
+                                        }
+                                    }    
+                                })
+                            }else if (res.count > 0){
+                                this.$message.warning('该用户名已注册')
+                            }
+                        }
+                    })
+                }
                 
             });
         },
         checkForm(form){
             form.verify({
+                username: function(value, item){ //value：表单的值、item：表单的DOM对象
+                    if(!new RegExp("^[a-zA-Z0-9_\u4e00-\u9fa5\\s·]+$").test(value)){
+                    return '用户名不能有特殊字符';
+                    }
+                    if(/(^\_)|(\__)|(\_+$)/.test(value)){
+                    return '用户名首尾不能出现下划线\'_\'';
+                    }
+                    if(/^\d+\d+\d$/.test(value)){
+                    return '用户名不能全为数字';
+                    }
+                },
                 qq:[/^[1-9][0-9]{4,9}$/,'QQ号格式不正确'],
                 name:[/^[\u2E80-\u9FFF]+$/,'姓名输入不合法'],
                 englishName:[/^[a-zA-Z]+$/,'英文名输入不合法'],
@@ -171,8 +321,30 @@ export default {
                 tel:[/^((0\d{2,3})-)?(\d{7,8})(-(\d{3,}))?$|(0\d{10})$/,'联系电话不符合规则']
             })
         },
+        showForm() {
+            layui.use(['form'], ()=>{
+                var form = layui.form
+                form.render()
+                //表单初始赋值
+                form.val('example', {
+                    'username':this.info.username,
+                    'qq': this.info.qq,
+                    'name':this.info.name,
+                    'englishname': this.info.englishname,
+                    'email':this.info.email,
+                    'address':this.info.address,
+                    'mobile':this.info.mobile,
+                    'postcode':this.info.postcode,
+                    'tel':this.info.tel,
+                    'usertype':this.info.usertype,
+                    'deptid':this.info.deptid,
+                    'systemName': this.info.systemname,
+                    'remark': this.info.remark
+                })
+            })
+        },
         cancel(){
-            this.$router.back(-1);
+            this.$router.push({name: 'user'});
         }
     }
 }

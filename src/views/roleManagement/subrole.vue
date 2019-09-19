@@ -40,7 +40,6 @@
     </div>
 </template>
 <script>
-import { sysnameList } from "@/filter/groupList"
 import { querySysnameList, addRole, roleEdit } from '@/api/api'
 export default {
     data(){

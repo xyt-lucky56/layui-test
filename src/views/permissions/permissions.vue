@@ -49,7 +49,6 @@
 <script>
 import { filterData,isexpands } from '@/filter/groupList'
 import FengunionTable from '@/utils/comTable'//表格封装
-import { sysnameList, filterViewType } from "@/filter/groupList"
 import { path,querySysnameList, queryGroupinfo, permissionsMenu, deleteGroupinfo } from "@/api/api"
 export default {
     data() {
@@ -72,7 +71,9 @@ export default {
                     return isexpands(res.isexpand)
                 }},
                 {field:'sortno', title: '出现顺序'},
-                {field:'remark', title: '备注'},
+                {field:'remark', title: '备注', templet:function(res){
+                    return filterData(res.remark)
+                }},
                 {field:'status', title: '操作',toolbar: '#barDemo',width:210,fixed: 'right'},
             ]],
             cols2:[[

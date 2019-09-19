@@ -19,7 +19,7 @@
 </template>
 <script>
 import FengunionTable from '@/utils/comTable'  //表格封装
-import { filterSysName } from "@/filter/groupList"
+import { filterData } from '@/filter/groupList'
 import { path,QUERYROLELIST, roleDelete } from '@/api/api'
 export default {
     data(){
@@ -28,7 +28,9 @@ export default {
                 {field:'id', title: '编号', width:150, sort: true},
                 {field:'rolename', title: '角色名称'},
                 {field:'systemname', title: '系统名称', },
-                {field:'remark', title: '备注'},
+                {field:'remark', title: '备注', templet:function(res){
+                    return filterData(res.remark)
+                }},
                 {field:'status', title: '操作',toolbar: '#barDemo',width:260,fixed: 'right'},
             ]],
             limit:10,
