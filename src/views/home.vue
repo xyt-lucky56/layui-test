@@ -283,9 +283,10 @@ export default {
     setCookieAndTimeOut(c_name, value, days) {
       var str = c_name + "=" + escape(value);
       if (days > 0) {
+        var domain = process.env.NODE_ENV === 'development' ? '.ll.com' : 'll.56xinyun.cn'
         var date = new Date();
         date.setTime(date.getTime() + days * 24 * 60 * 60 * 1000);
-        str += ";Path=/;domain=" + ".ll.com";
+        str += ";Path=/;domain=" + domain;
         str += ";expires=" + date.toGMTString();
       }
       document.cookie = str;
