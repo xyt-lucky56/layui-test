@@ -170,7 +170,7 @@ export default {
                 'tel':this.info.tel,
                 'usertype':this.info.usertype,
                 'deptid': this.info.deptid, 
-                'systemName': this.info.systemName, 
+                'systemname': this.info.systemName, 
                 'remark': this.info.remark
             })
             this.formSubmit(form)
@@ -213,10 +213,9 @@ export default {
         formSubmit(form){
             //监听提交
             form.on('submit(demo1)', (data)=>{
-                console.log(data.field)
+                // console.log(data.field);
                 let dataon = data.field;                
                 if(this.info.id){
-                    
                     let params = {
                         id: this.info.id,
                         deptid: dataon.deptid,  //部门Id
@@ -248,7 +247,8 @@ export default {
                 }else {   // 添加用户
                     // 校验用户名
                     let cheackData = {
-                        username: dataon.username
+                        username: dataon.username,
+                        mobile: null
                     }
                     cheackUsername(cheackData).then(res => {
                         if(res.code === 0){
@@ -256,6 +256,7 @@ export default {
 
                                 // 校验手机号
                                 let cheackData2 = {
+                                    username: null,
                                     mobile: dataon.mobile
                                 }
                                 cheackUsername(cheackData2).then(res => {
@@ -338,7 +339,7 @@ export default {
                     'tel':this.info.tel,
                     'usertype':this.info.usertype,
                     'deptid':this.info.deptid,
-                    'systemName': this.info.systemname,
+                    'systemname': this.info.systemname,
                     'remark': this.info.remark
                 })
             })

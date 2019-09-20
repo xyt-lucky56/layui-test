@@ -31,7 +31,7 @@ export default {
                 {field:'username', title: '用户名',fixed: 'left'},
                 {field:'deptName', title: '所属部门'},
                 {field:'systemname', title: '系统名称'},
-                {field:'username', title: '姓名'},
+                {field:'name', title: '姓名'},
                 {field:'mobile', title: '手机号'},
                 {field:'tel', title: '联系电话'},
                 {field:'email', title: '电子邮箱'},
@@ -45,7 +45,7 @@ export default {
             ]],
             tree:'',
             limit: 10,
-            deptId: "0"
+            deptId: ""
         }
     },
     created() {
@@ -76,7 +76,6 @@ export default {
                     treedata.push(obj1);
                 }
                 this.depList = treedata;
-                this.deptId = "0";
                 setTimeout(() => {
                     this.showtree();
                 }, 100)
@@ -92,7 +91,7 @@ export default {
                 if(obj.event === 'edit'){
                     this.$router.push({name:'adduser',params:{data}});
                 }else if(obj.event === 'del'){
-                    layer.confirm('真的删除行么', function(index){
+                    layer.confirm('真的删除行么', (index) => {
                         let params={
                             id:data.id,
                         }
@@ -101,12 +100,13 @@ export default {
                                 this.$message.success('删除成功')
                                 var url = path+'/system/findAllUser'
                                 var params = {};
+                                
                                 if(this.deptId !== "0"){
                                     url = path+'/system/findUserByDept';
                                     params = { deptId: this.deptId };
                                 }
                                 
-                                this.table.reload('test1', {
+                                table.reload('test1', {
                                     url: url
                                     ,where: params //设定异步数据接口的额外参数
                                 });
@@ -127,6 +127,7 @@ export default {
             })
         },
         showtree() {
+            var that = this;
             FengunionTable('test1', path + '/system/findAllUser', this.cols, {}, true,this.limit,'post',function(e){
                 // console.log(e)
             })
@@ -139,7 +140,7 @@ export default {
                     elem: '#test',
                     data: this.depList,
                     accordion: true,//手风琴模式                
-                    click: function(obj){
+                    click: (obj) => {
                         $('div.layui-tree-set').each(function() {
                             $(this).removeClass("bgdetail");
                         })  
@@ -148,9 +149,10 @@ export default {
                         }
 
                         let data = obj.data;  //获取当前点击的节点数据
-                        console.log(data);
-                        this.deptId = data.id;
-                        if(data.id !== "0"){
+                        // console.log(data);
+                        that.deptId = data.id;
+                        // console.log(that.deptId);
+                        if(that.deptId !== "0"){
                             let params = { deptId: data.id};
                             table.reload('test1', {
                                 url: path+'/system/findUserByDept'
