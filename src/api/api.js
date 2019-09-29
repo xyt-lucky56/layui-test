@@ -193,3 +193,4 @@ const ASSIGNROLE = '/system/allocateRole'
 export const assignRole = function(params){
     return https(ASSIGNROLE, params, 'post');
 }
+// cc
